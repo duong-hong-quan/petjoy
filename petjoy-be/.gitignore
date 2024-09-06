@@ -1,0 +1,39 @@
+# Node modules
+node_modules/
+
+# Build output
+dist/
+
+# Environment files
+.env
+.env.*.local
+
+# Logs
+*.log
+logs/
+
+# Dependency directories
+jspm_packages/
+
+# TypeScript build
+*.tsbuildinfo
+
+# IDE/editor directories
+.vscode/
+.idea/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# npm package lock file
+package-lock.json
+
+# Yarn lock file
+yarn.lock
+
+# Sentry
+.sentry/
+
+# Coverage directory
+coverage/
