@@ -19,7 +19,7 @@ export default function HomePage() {
   return (
     <>
       <Box>
-        <Box container spacing={4}>
+        <Box>
           <Box
             sx={{
               backgroundImage: `url(${background.src})`,
