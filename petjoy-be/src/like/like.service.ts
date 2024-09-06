@@ -3,9 +3,9 @@ import { CreateLikeDto } from "./dto/create-like.dto";
 import { UpdateLikeDto } from "./dto/update-like.dto";
 import { Like } from "./entities/like.entity";
 import { Repository } from "typeorm";
-import { AppActionResultDto } from "@/common/dto/app-action-result.dto";
-import { User } from "@/user/entities/user.entity";
-import { Pet } from "@/pet/entities/pet.entity";
+import { AppActionResultDto } from "../common/dto/app-action-result.dto";
+import { User } from "../user/entities/user.entity";
+import { Pet } from "../pet/entities/pet.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 
 @Injectable()

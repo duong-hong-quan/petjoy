@@ -3,8 +3,8 @@ import { CreateMatchDto } from "./dto/create-match.dto";
 import { UpdateMatchDto } from "./dto/update-match.dto";
 import { Match } from "./entities/match.entity";
 import { Repository } from "typeorm";
-import { AppActionResultDto } from "@/common/dto/app-action-result.dto";
-import { User } from "@/user/entities/user.entity";
+import { AppActionResultDto } from "../common/dto/app-action-result.dto";
+import { User } from "../user/entities/user.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 
 @Injectable()

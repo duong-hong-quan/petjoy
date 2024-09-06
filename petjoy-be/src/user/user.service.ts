@@ -4,7 +4,7 @@ import { UpdateUserDto } from "./dto/update-user.dto";
 import { Repository } from "typeorm";
 import { User } from "./entities/user.entity";
 import { LoginRequestDto } from "./dto/login-request.dto";
-import { AppActionResultDto } from "@/common/dto/app-action-result.dto";
+import { AppActionResultDto } from "../common/dto/app-action-result.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 
 @Injectable()

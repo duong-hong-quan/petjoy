@@ -3,7 +3,7 @@ import { CreatePetDto } from "./dto/create-pet.dto";
 import { UpdatePetDto } from "./dto/update-pet.dto";
 import { Pet } from "./entities/pet.entity";
 import { Repository } from "typeorm";
-import { AppActionResultDto } from "@/common/dto/app-action-result.dto";
+import { AppActionResultDto } from "../common/dto/app-action-result.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 
 @Injectable()
