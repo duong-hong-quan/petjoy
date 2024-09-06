@@ -14,24 +14,20 @@ export default function LoginPage() {
   return (
     <Box
       sx={{
-        width: "100vw",
-        height: "100vh",
-        backgroundImage: `url(${background.src})`,
-        backgroundSize: "cover",
+        width: "100%",
         backgroundPosition: "center",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        backgroundImage: `url(${background.src})`,
+        backgroundSize: "cover",
+        minHeight: "100vh",
+        flexDirection: "column",
+        textAlign: "center",
+        height: "100vh",
       }}
     >
-      <Box
-        sx={{
-          bgcolor: "background.paper",
-          p: 4,
-          borderRadius: 2,
-          boxShadow: 3,
-        }}
-      >
+      <Box>
         <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
           <Image src={logo.src} alt="Paw logo" width={50} height={50} />
         </Box>

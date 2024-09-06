@@ -3,6 +3,7 @@ import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+import Link from "next/link";
 function Navbar() {
   return (
     <AppBar
@@ -15,9 +16,13 @@ function Navbar() {
       }}
     >
       <Toolbar>
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+        <Link
+          href={"/"}
+          style={{ flexGrow: 1, fontSize: "2rem", fontWeight: "bold" }}
+        >
           PETJOY
-        </Typography>
+        </Link>
+        <Link href={"/login"}>Đăng nhập</Link>
         <Button
           color="inherit"
           variant="outlined"

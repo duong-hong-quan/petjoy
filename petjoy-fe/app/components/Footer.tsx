@@ -9,21 +9,21 @@ function Footer() {
             <Typography variant="h4" gutterBottom sx={{ fontWeight: "bold" }}>
               PETJOY
             </Typography>
-            <Typography variant="body2">Trang chủ</Typography>
-            <Typography variant="body2">Quet</Typography>
-            <Typography variant="body2">Hồ sơ</Typography>
-            <Typography variant="body2">Lượt thích</Typography>
-            <Typography variant="body2">Khám phá</Typography>
-            <Typography variant="body2">Mèo vặt</Typography>
+            <Typography variant="body1">Trang chủ</Typography>
+            <Typography variant="body1">Quet</Typography>
+            <Typography variant="body1">Hồ sơ</Typography>
+            <Typography variant="body1">Lượt thích</Typography>
+            <Typography variant="body1">Khám phá</Typography>
+            <Typography variant="body1">Mèo vặt</Typography>
           </Grid>
           <Grid item xs={12} md={3}>
             <Typography variant="h6" gutterBottom sx={{ fontWeight: "bold" }}>
               Tìm hiểu thêm
             </Typography>
-            <Typography variant="body2">Câu hỏi thường gặp</Typography>
-            <Typography variant="body2">Chính sách & quyền riêng tư</Typography>
-            <Typography variant="body2">Thỏa thuận sử dụng</Typography>
-            <Typography variant="body2">Điều khoản</Typography>
+            <Typography variant="body1">Câu hỏi thường gặp</Typography>
+            <Typography variant="body1">Chính sách & quyền riêng tư</Typography>
+            <Typography variant="body1">Thỏa thuận sử dụng</Typography>
+            <Typography variant="body1">Điều khoản</Typography>
           </Grid>
           <Grid item xs={12} md={3}>
             <Typography
@@ -33,18 +33,8 @@ function Footer() {
             >
               Các gói tính năng cao cấp
             </Typography>
-            <Typography variant="body2">Theo tuần: 35.000đ/ tuần</Typography>
-            <Typography variant="body2">Theo tháng: 138.000đ/ tháng</Typography>
-            <Typography variant="h6" gutterBottom>
-              Liên hệ
-            </Typography>
-            <Link
-              href="https://petjoy.com.vn"
-              color="inherit"
-              underline="hover"
-            >
-              Petjoy.com.vn
-            </Link>
+            <Typography variant="body1">Theo tuần: 35.000đ/ tuần</Typography>
+            <Typography variant="body1">Theo tháng: 138.000đ/ tháng</Typography>
           </Grid>
         </Grid>
       </Container>
