@@ -1,9 +1,5 @@
-import React from "react";
 import {
-  AppBar,
-  Toolbar,
   Typography,
-  Button,
   Container,
   Grid,
   Card,
@@ -12,7 +8,6 @@ import {
   Box,
   Link,
 } from "@mui/material";
-import { styled } from "@mui/material/styles";
 import background from "../../assets/img/background.png";
 import dogcat from "../../assets/img/dogcat.png";
 import { StyledTypography } from "../components/StyledTypography";

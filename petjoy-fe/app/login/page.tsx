@@ -1,23 +1,15 @@
-import React from "react";
 import Image from "next/image";
 import {
-  AppBar,
-  Toolbar,
   Typography,
   Button,
   TextField,
   Box,
-  Container,
   Link,
   Divider,
 } from "@mui/material";
-import {
-  Google as GoogleIcon,
-  Facebook as FacebookIcon,
-} from "@mui/icons-material";
+import { Google as GoogleIcon } from "@mui/icons-material";
 import background from "../../assets/img/background.png";
 import logo from "../../assets/img/paw-logo.png";
-import { log } from "console";
 export default function LoginPage() {
   return (
     <Box
