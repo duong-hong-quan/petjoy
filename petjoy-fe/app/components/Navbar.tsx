@@ -42,18 +42,18 @@ function Navbar() {
       onKeyDown={toggleDrawer(false)}
     >
       <List>
-        <ListItem button component={Link} href="/">
+        <ListItem component={Link} href="/">
           <ListItemText primary="Trang chủ" />
         </ListItem>
-        <ListItem button component={Link} href="/match">
+        <ListItem component={Link} href="/match">
           <ListItemText primary="Match" />
         </ListItem>
         {user ? (
           <>
-            <ListItem button component={Link} href="/">
+            <ListItem component={Link} href="/">
               <ListItemText primary="Hồ sơ" />
             </ListItem>
-            <ListItem button onClick={() => dispatch(logout())}>
+            <ListItem onClick={() => dispatch(logout())}>
               <ListItemText primary="Đăng xuất" />
             </ListItem>
           </>
@@ -67,10 +67,10 @@ function Navbar() {
               marginTop: 4,
             }}
           >
-            <ListItem button component={Link} href="/login">
+            <ListItem component={Link} href="/login">
               <ListItemText primary="Đăng nhập" />
             </ListItem>
-            <ListItem button component={Link} href="/register">
+            <ListItem component={Link} href="/register">
               <ListItemText primary="Đăng ký" />
             </ListItem>
           </Box>
