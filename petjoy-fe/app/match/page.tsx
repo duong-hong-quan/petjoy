@@ -13,6 +13,8 @@ import {
   IconButton,
   Typography,
   Stack,
+  useTheme,
+  useMediaQuery,
 } from "@mui/material";
 import { useSwipeable } from "react-swipeable";
 import dogcat from "../../assets/img/dogcat.png";
@@ -66,6 +68,8 @@ export default function MatchPage() {
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [swipePosition, setSwipePosition] = useState(0);
   const cardRef = useRef(null);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const nextCardIndex = (currentCardIndex + 1) % userCards.length;
 
@@ -90,96 +94,15 @@ export default function MatchPage() {
   };
 
   const currentUser = userCards[currentCardIndex];
-  const nextUser = userCards[nextCardIndex];
 
   const swipePercentage =
     (Math.abs(swipePosition) / cardRef.current?.offsetWidth) * 100 || 0;
-  const showNextCard = swipePercentage >= 50;
 
   return (
     <Container maxWidth="xl" sx={{ mt: 6, p: 2 }}>
-      <Box display="flex" gap={4}>
-        {/* Left side - User cards */}
-        <Box flex={1} borderRight="1px solid #E0E0E0" pr={2}>
-          <Box display="flex" alignItems="center" gap={2} mb={2}>
-            <Avatar src={dogcat.src} sx={{ width: 56, height: 56 }} />
-            <Typography variant="h5" flex={1} fontWeight="bold">
-              Xin chào Quân
-            </Typography>
-            <IconButton>
-              <AddCircleOutlineOutlined
-                sx={{
-                  color: "black",
-                  fontSize: "2.5rem",
-                }}
-              />
-            </IconButton>
-          </Box>
-
-          <Stack direction="row" spacing={2} mb={3}>
-            <Button
-              variant="contained"
-              sx={{
-                backgroundColor: "#007EFF",
-                borderRadius: "20px",
-                px: 3,
-                fontWeight: "bold",
-                "&:hover": { backgroundColor: "#0056b3" },
-              }}
-            >
-              Lượt thích
-            </Button>
-            <Button
-              variant="outlined"
-              sx={{
-                borderRadius: "20px",
-                px: 3,
-                color: "black",
-                borderColor: "black",
-                fontWeight: "bold",
-                "&:hover": { backgroundColor: "#f0f0f0" },
-              }}
-            >
-              Trò chuyện
-            </Button>
-          </Stack>
-
-          <Box display="grid" gridTemplateColumns="repeat(3, 1fr)" gap={2}>
-            {userCards.map((user) => (
-              <Card
-                key={user.id}
-                sx={{ position: "relative", transition: "all 0.3s" }}
-              >
-                <CardMedia
-                  component="img"
-                  height="120"
-                  image={user.image}
-                  alt={user.name}
-                  sx={{ objectFit: "cover" }}
-                />
-                <Box
-                  sx={{
-                    position: "absolute",
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    background:
-                      "linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%)",
-                    color: "white",
-                    padding: "8px",
-                  }}
-                >
-                  <Typography variant="subtitle2">
-                    {user.name}, {user.age}
-                  </Typography>
-                </Box>
-              </Card>
-            ))}
-          </Box>
-        </Box>
-
-        {/* Right side - Swipeable user card */}
-        <Box flex={1}>
+      <Box display="flex" flexDirection={isMobile ? "column" : "row"} gap={4}>
+        {/* Swipeable user card */}
+        <Box flex={1} order={isMobile ? 1 : 2} mb={isMobile ? 4 : 0}>
           <Card
             ref={cardRef}
             sx={{
@@ -199,7 +122,7 @@ export default function MatchPage() {
             <Box sx={{ position: "relative" }}>
               <CardMedia
                 component="img"
-                height="400"
+                height={isMobile ? "300" : "400"}
                 image={currentUser.image}
                 alt={currentUser.name}
                 sx={{
@@ -269,6 +192,94 @@ export default function MatchPage() {
               </Typography>
             </CardContent>
           </Card>
+        </Box>
+
+        {/* User cards grid */}
+        <Box
+          flex={1}
+          order={isMobile ? 2 : 1}
+          borderRight={isMobile ? "none" : "1px solid #E0E0E0"}
+          pr={isMobile ? 0 : 2}
+        >
+          <Box display="flex" alignItems="center" gap={2} mb={2}>
+            <Avatar src={dogcat.src} sx={{ width: 56, height: 56 }} />
+            <Typography variant="h5" flex={1} fontWeight="bold">
+              Xin chào Quân
+            </Typography>
+            <IconButton>
+              <AddCircleOutlineOutlined
+                sx={{
+                  color: "black",
+                  fontSize: "2.5rem",
+                }}
+              />
+            </IconButton>
+          </Box>
+
+          <Stack direction="row" spacing={2} mb={3}>
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: "#007EFF",
+                borderRadius: "20px",
+                px: 3,
+                fontWeight: "bold",
+                "&:hover": { backgroundColor: "#0056b3" },
+              }}
+            >
+              Lượt thích
+            </Button>
+            <Button
+              variant="outlined"
+              sx={{
+                borderRadius: "20px",
+                px: 3,
+                color: "black",
+                borderColor: "black",
+                fontWeight: "bold",
+                "&:hover": { backgroundColor: "#f0f0f0" },
+              }}
+            >
+              Trò chuyện
+            </Button>
+          </Stack>
+
+          <Box
+            display="grid"
+            gridTemplateColumns={isMobile ? "repeat(2, 1fr)" : "repeat(3, 1fr)"}
+            gap={2}
+          >
+            {userCards.map((user) => (
+              <Card
+                key={user.id}
+                sx={{ position: "relative", transition: "all 0.3s" }}
+              >
+                <CardMedia
+                  component="img"
+                  height="120"
+                  image={user.image}
+                  alt={user.name}
+                  sx={{ objectFit: "cover" }}
+                />
+                <Box
+                  sx={{
+                    position: "absolute",
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    background:
+                      "linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%)",
+                    color: "white",
+                    padding: "8px",
+                  }}
+                >
+                  <Typography variant="subtitle2">
+                    {user.name}, {user.age}
+                  </Typography>
+                </Box>
+              </Card>
+            ))}
+          </Box>
         </Box>
       </Box>
     </Container>

@@ -1,17 +1,76 @@
 "use client";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/store";
-import { StyledButton } from "./StyledButton";
 import { logout } from "../redux/features/authSlice";
-import { Box } from "@mui/material";
+import {
+  Box,
+  Drawer,
+  IconButton,
+  List,
+  ListItem,
+  ListItemText,
+} from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
+import { useState } from "react";
+
 function Navbar() {
   const user = useSelector((state: RootState) => state.auth.user);
   const dispatch = useDispatch();
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  const toggleDrawer =
+    (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
+      if (
+        event.type === "keydown" &&
+        ((event as React.KeyboardEvent).key === "Tab" ||
+          (event as React.KeyboardEvent).key === "Shift")
+      ) {
+        return;
+      }
+      setDrawerOpen(open);
+    };
+
+  const drawerList = (
+    <Box
+      sx={{ width: 250 }}
+      role="presentation"
+      onClick={toggleDrawer(false)}
+      onKeyDown={toggleDrawer(false)}
+    >
+      <List>
+        <ListItem button component={Link} href="/">
+          <ListItemText primary="Trang chủ" />
+        </ListItem>
+        <ListItem button component={Link} href="/match">
+          <ListItemText primary="Match" />
+        </ListItem>
+        {user ? (
+          <>
+            <ListItem button component={Link} href="/">
+              <ListItemText primary="Hồ sơ" />
+            </ListItem>
+            <ListItem button onClick={() => dispatch(logout())}>
+              <ListItemText primary="Đăng xuất" />
+            </ListItem>
+          </>
+        ) : (
+          <>
+            <ListItem button component={Link} href="/login">
+              <ListItemText primary="Đăng nhập" />
+            </ListItem>
+            <ListItem button component={Link} href="/register">
+              <ListItemText primary="Đăng ký" />
+            </ListItem>
+          </>
+        )}
+      </List>
+    </Box>
+  );
+
   return (
     <AppBar
       position="static"
@@ -23,6 +82,15 @@ function Navbar() {
       }}
     >
       <Toolbar>
+        <IconButton
+          edge="start"
+          color="inherit"
+          aria-label="menu"
+          sx={{ mr: 2, display: { xs: "block", md: "none" } }}
+          onClick={toggleDrawer(true)}
+        >
+          <MenuIcon />
+        </IconButton>
         <Link
           href={"/"}
           style={{ flexGrow: 1, fontSize: "2rem", fontWeight: "bold" }}
@@ -31,7 +99,7 @@ function Navbar() {
         </Link>
         <Box
           sx={{
-            display: "flex",
+            display: { xs: "none", md: "flex" },
             gap: 2,
             justifyContent: "space-between",
             alignItems: "center",
@@ -63,7 +131,9 @@ function Navbar() {
           </Link>
         </Box>
         {user ? (
-          <>
+          <Box
+            sx={{ display: { xs: "none", md: "flex" }, alignItems: "center" }}
+          >
             <Link
               href={"/"}
               style={{
@@ -88,9 +158,9 @@ function Navbar() {
             >
               Đăng xuất
             </Button>
-          </>
+          </Box>
         ) : (
-          <>
+          <Box sx={{ display: { xs: "none", md: "flex" } }}>
             <Link href={"/login"}>Đăng nhập</Link>
             <Button
               color="inherit"
@@ -105,10 +175,14 @@ function Navbar() {
             >
               Đăng ký
             </Button>
-          </>
+          </Box>
         )}
       </Toolbar>
+      <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)}>
+        {drawerList}
+      </Drawer>
     </AppBar>
   );
 }
+
 export default Navbar;
