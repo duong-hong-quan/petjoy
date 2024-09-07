@@ -58,14 +58,22 @@ function Navbar() {
             </ListItem>
           </>
         ) : (
-          <>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 2,
+              marginTop: 4,
+            }}
+          >
             <ListItem button component={Link} href="/login">
               <ListItemText primary="Đăng nhập" />
             </ListItem>
             <ListItem button component={Link} href="/register">
               <ListItemText primary="Đăng ký" />
             </ListItem>
-          </>
+          </Box>
         )}
       </List>
     </Box>
@@ -112,7 +120,6 @@ function Navbar() {
               textDecoration: "none",
               fontSize: "1rem",
               fontWeight: "bold",
-              marginRight: 20,
             }}
           >
             Trang chủ
@@ -160,7 +167,18 @@ function Navbar() {
             </Button>
           </Box>
         ) : (
-          <Box sx={{ display: { xs: "none", md: "flex" } }}>
+          <Box
+            sx={{
+              display: {
+                xs: "none",
+                md: "flex",
+                gap: 2,
+                justifyContent: "space-between",
+                alignItems: "center",
+                fontWeight: "bold",
+              },
+            }}
+          >
             <Link href={"/login"}>Đăng nhập</Link>
             <Button
               color="inherit"
