@@ -7,7 +7,7 @@ import {
 } from "typeorm";
 import { User } from "../../user/entities/user.entity";
 import { Like } from "../../like/entities/like.entity";
-import { PetType } from "@/pet-type/entities/pet-type.entity";
+import { PetType } from "../../pet-type/entities/pet-type.entity";
 
 @Entity()
 export class Pet {
