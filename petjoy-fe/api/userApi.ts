@@ -1,5 +1,4 @@
-import { AppActionResultDto } from "./../../petjoy-be/src/common/dto/app-action-result.dto";
-import { LoginRequestDto } from "./../../petjoy-be/src/user/dto/login-request.dto";
+import { AppActionResultDto, LoginRequestDto } from "@/type";
 import api from "./config";
 
 export const loginApi = async (
