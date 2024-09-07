@@ -67,7 +67,7 @@ const userCards = [
 export default function MatchPage() {
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [swipePosition, setSwipePosition] = useState(0);
-  const cardRef = useRef(null);
+  const cardRef = useRef<HTMLDivElement>(null);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -80,11 +80,10 @@ export default function MatchPage() {
     onSwipedLeft: () => handleSwipe("left"),
     onSwipedRight: () => handleSwipe("right"),
     onSwiped: () => setSwipePosition(0),
-    preventDefaultTouchmoveEvent: true,
     trackMouse: true,
   });
 
-  const handleSwipe = (direction) => {
+  const handleSwipe = (direction: "left" | "right") => {
     const swipeDistance = direction === "left" ? -300 : 300;
     setSwipePosition(swipeDistance);
     setTimeout(() => {
@@ -95,16 +94,13 @@ export default function MatchPage() {
 
   const currentUser = userCards[currentCardIndex];
 
-  const swipePercentage =
-    (Math.abs(swipePosition) / cardRef.current?.offsetWidth) * 100 || 0;
-
   return (
     <Container maxWidth="xl" sx={{ mt: 6, p: 2 }}>
       <Box display="flex" flexDirection={isMobile ? "column" : "row"} gap={4}>
         {/* Swipeable user card */}
         <Box flex={1} order={isMobile ? 1 : 2} mb={isMobile ? 4 : 0}>
           <Card
-            ref={cardRef}
+            // ref={cardRef}
             sx={{
               height: "100%",
               overflow: "hidden",
