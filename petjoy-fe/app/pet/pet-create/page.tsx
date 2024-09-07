@@ -19,6 +19,10 @@ import {
   Input,
 } from "@mui/material";
 import { DateRange, CloudUpload, Pets, Delete } from "@mui/icons-material";
+interface Image {
+  file: File;
+  preview: string;
+}
 
 export default function PetRegistrationForm() {
   const {
@@ -27,14 +31,14 @@ export default function PetRegistrationForm() {
     formState: { errors },
   } = useForm();
 
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState<Image[]>([]);
 
-  const onSubmit = (data) => {
+  const onSubmit = (data: any) => {
     console.log({ ...data, images });
   };
 
-  const handleImageChange = (event) => {
-    const files = Array.from(event.target.files);
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files || []);
     const newImages = files.map((file) => ({
       file,
       preview: URL.createObjectURL(file),
@@ -42,10 +46,9 @@ export default function PetRegistrationForm() {
     setImages((prevImages) => [...prevImages, ...newImages]);
   };
 
-  const handleRemoveImage = (index) => {
+  const handleRemoveImage = (index: number) => {
     setImages((prevImages) => prevImages.filter((_, i) => i !== index));
   };
-
   // Custom styles for rounded corners and labels
   const roundedStyle = {
     "& .MuiOutlinedInput-root": {
