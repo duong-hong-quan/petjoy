@@ -4,7 +4,7 @@ import { UpdatePetTypeDto } from "./dto/update-pet-type.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { PetType } from "./entities/pet-type.entity";
 import { Repository } from "typeorm";
-import { AppActionResultDto } from "@/common/dto/app-action-result.dto";
+import { AppActionResultDto } from "../common/dto/app-action-result.dto";
 
 @Injectable()
 export class PetTypeService {
