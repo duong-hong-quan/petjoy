@@ -10,6 +10,7 @@ import { MatchModule } from "./match/match.module";
 import { LikeModule } from "./like/like.module";
 import { UserModule } from "./user/user.module";
 import { config as envConfig } from "dotenv";
+import { PetTypeModule } from './pet-type/pet-type.module';
 envConfig();
 
 @Module({
@@ -30,6 +31,7 @@ envConfig();
     MessageModule,
     PaymentPackageModule,
     PaymentModule,
+    PetTypeModule,
   ],
   controllers: [AppController],
   providers: [AppService],

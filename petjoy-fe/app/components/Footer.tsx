@@ -2,7 +2,17 @@
 import { Typography, Container, Grid, Box, Link } from "@mui/material";
 function Footer() {
   return (
-    <Box sx={{ bgcolor: "#0080ff", color: "white", mt: 4, py: 4 }}>
+    <Box
+      position={"static"}
+      sx={{
+        bgcolor: "#0080ff",
+        color: "white",
+        mt: 4,
+        py: 4,
+        bottom: 0,
+        zIndex: 50,
+      }}
+    >
       <Container maxWidth="lg">
         <Grid container spacing={4}>
           <Grid item xs={12} md={3}>

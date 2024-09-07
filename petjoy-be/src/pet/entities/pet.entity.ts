@@ -7,6 +7,7 @@ import {
 } from "typeorm";
 import { User } from "../../user/entities/user.entity";
 import { Like } from "../../like/entities/like.entity";
+import { PetType } from "@/pet-type/entities/pet-type.entity";
 
 @Entity()
 export class Pet {
@@ -30,4 +31,13 @@ export class Pet {
 
   @OneToMany(() => Like, (like) => like.pet)
   likes: Like[];
+
+  @ManyToOne(() => PetType, (petType) => petType.hiringPetTypes)
+  petType: PetType;
+
+  @ManyToOne(() => PetType, (petType) => petType.filterPetTypes)
+  filterPetType: PetType;
+
+  @ManyToOne(() => PetType, (petType) => petType.pets)
+  isHiringPetType: PetType;
 }

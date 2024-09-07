@@ -1,133 +1,348 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
+import { useForm, Controller } from "react-hook-form";
 import {
-  AppBar,
-  Toolbar,
   Typography,
-  Container,
+  Box,
+  Grid,
   TextField,
   Button,
   FormControl,
-  InputLabel,
+  FormLabel,
+  InputAdornment,
   Select,
   MenuItem,
-  Grid,
   IconButton,
-  Box,
+  ImageList,
+  ImageListItem,
+  ImageListItemBar,
+  Input,
 } from "@mui/material";
-import { styled } from "@mui/system";
-import AddIcon from "@mui/icons-material/Add";
-import LanguageIcon from "@mui/icons-material/Language";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
-
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: "#0088ff",
-    },
-    background: {
-      default: "#000000",
-    },
-  },
-});
-
-const StyledContainer = styled(Container)(({ theme }) => ({
-  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cpath d='M12 6.76c-1.41 1.41-3.29 2.24-5.36 2.24-2.07 0-3.95-.83-5.36-2.24-2.83-2.83-2.83-7.43 0-10.26 1.41-1.41 3.29-2.24 5.36-2.24 2.07 0 3.95.83 5.36 2.24 2.83 2.83 2.83 7.43 0 10.26z' fill='%230088ff' fill-opacity='0.2'/%3E%3C/svg%3E")`,
-  backgroundRepeat: "repeat",
-  minHeight: "100vh",
-  paddingTop: theme.spacing(4),
-  paddingBottom: theme.spacing(4),
-}));
-
-const ImageUploadBox = styled(Box)(({ theme }) => ({
-  width: "100%",
-  height: 200,
-  border: "2px dashed #0088ff",
-  borderRadius: theme.shape.borderRadius,
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  cursor: "pointer",
-}));
+import { DateRange, CloudUpload, Pets, Delete } from "@mui/icons-material";
 
 export default function PetRegistrationForm() {
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const [images, setImages] = useState([]);
+
+  const onSubmit = (data) => {
+    console.log({ ...data, images });
+  };
+
+  const handleImageChange = (event) => {
+    const files = Array.from(event.target.files);
+    const newImages = files.map((file) => ({
+      file,
+      preview: URL.createObjectURL(file),
+    }));
+    setImages((prevImages) => [...prevImages, ...newImages]);
+  };
+
+  const handleRemoveImage = (index) => {
+    setImages((prevImages) => prevImages.filter((_, i) => i !== index));
+  };
+
+  // Custom styles for rounded corners and labels
+  const roundedStyle = {
+    "& .MuiOutlinedInput-root": {
+      borderRadius: "15px",
+    },
+    "& .MuiSelect-select": {
+      borderRadius: "15px",
+    },
+    "& .MuiInputLabel-root": {
+      fontWeight: "bold",
+      color: "#007EFF",
+    },
+  };
+
+  // Custom style for form labels
+  const labelStyle = {
+    fontWeight: "bold",
+    color: "#007EFF",
+    marginBottom: 1,
+  };
+
   return (
-    <ThemeProvider theme={theme}>
-      <StyledContainer maxWidth="md">
-        <Box sx={{ mt: 4, bgcolor: "background.paper", p: 4, borderRadius: 2 }}>
-          <Typography variant="h4" component="h1" gutterBottom>
-            Thông tin thú cưng
-          </Typography>
-
-          <form>
-            <Grid container spacing={3}>
-              <Grid item xs={12}>
+    <Box sx={{ padding: 4 }}>
+      <Typography
+        variant="h4"
+        component="h1"
+        gutterBottom
+        sx={{
+          color: "#007EFF",
+          fontWeight: "bold",
+          textTransform: "uppercase",
+          marginBottom: 4,
+        }}
+      >
+        Tạo hồ sơ thú cưng
+      </Typography>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Grid container spacing={4}>
+          <Grid item xs={12} md={6}>
+            <Controller
+              name="name"
+              control={control}
+              defaultValue=""
+              rules={{ required: "Tên là bắt buộc" }}
+              render={({ field, fieldState: { error } }) => (
                 <TextField
-                  fullWidth
-                  label="Tên thú cưng của bạn"
+                  {...field}
+                  label="Tên thú cưng"
                   variant="outlined"
-                />
-              </Grid>
-
-              <Grid item xs={6}>
-                <FormControl fullWidth variant="outlined">
-                  <InputLabel>Loài</InputLabel>
-                  <Select label="Loài">
-                    <MenuItem value="dog">Chó</MenuItem>
-                    <MenuItem value="cat">Mèo</MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid>
-
-              <Grid item xs={6}>
-                <FormControl fullWidth variant="outlined">
-                  <InputLabel>Giới tính</InputLabel>
-                  <Select label="Giới tính">
-                    <MenuItem value="male">Đực</MenuItem>
-                    <MenuItem value="female">Cái</MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid>
-
-              <Grid item xs={12}>
-                <Typography variant="h6" gutterBottom>
-                  Ảnh thú cưng
-                </Typography>
-                <Grid container spacing={2}>
-                  {[1, 2, 3, 4].map((index) => (
-                    <Grid item xs={3} key={index}>
-                      <ImageUploadBox>
-                        <AddIcon color="primary" fontSize="large" />
-                      </ImageUploadBox>
-                    </Grid>
-                  ))}
-                </Grid>
-              </Grid>
-
-              <Grid item xs={12}>
-                <FormControl fullWidth variant="outlined">
-                  <InputLabel>Khu vực sinh sống</InputLabel>
-                  <Select label="Khu vực sinh sống">
-                    <MenuItem value="urban">Thành thị</MenuItem>
-                    <MenuItem value="rural">Nông thôn</MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid>
-
-              <Grid item xs={12}>
-                <Button
-                  variant="contained"
-                  color="primary"
                   fullWidth
-                  size="large"
-                >
-                  Lưu hồ sơ
-                </Button>
-              </Grid>
-            </Grid>
-          </form>
-        </Box>
-      </StyledContainer>
-    </ThemeProvider>
+                  error={!!error}
+                  helperText={error?.message}
+                  sx={{ ...roundedStyle, marginBottom: 2 }}
+                />
+              )}
+            />
+            <Controller
+              name="breed"
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Giống"
+                  variant="outlined"
+                  fullWidth
+                  sx={{ ...roundedStyle, marginBottom: 2 }}
+                />
+              )}
+            />
+            <FormControl
+              component="fieldset"
+              sx={{ marginBottom: 2, width: "100%" }}
+            >
+              <FormLabel component="legend" sx={labelStyle}>
+                Loài
+              </FormLabel>
+              <Controller
+                name="species"
+                control={control}
+                defaultValue=""
+                rules={{ required: "Loài là bắt buộc" }}
+                render={({ field }) => (
+                  <Box sx={{ display: "flex", gap: 2 }}>
+                    <Button
+                      {...field}
+                      onClick={() => field.onChange("dog")}
+                      variant={field.value === "dog" ? "contained" : "outlined"}
+                      startIcon={<Pets />}
+                      sx={{ flex: 1, borderRadius: "15px" }}
+                    >
+                      Chó
+                    </Button>
+                    <Button
+                      {...field}
+                      onClick={() => field.onChange("cat")}
+                      variant={field.value === "cat" ? "contained" : "outlined"}
+                      startIcon={<Pets />}
+                      sx={{ flex: 1, borderRadius: "15px" }}
+                    >
+                      Mèo
+                    </Button>
+                  </Box>
+                )}
+              />
+            </FormControl>
+
+            <Controller
+              name="date"
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Ngày sinh"
+                  type="date"
+                  InputLabelProps={{ shrink: true }}
+                  fullWidth
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <DateRange />
+                      </InputAdornment>
+                    ),
+                  }}
+                  sx={{ ...roundedStyle, marginBottom: 2 }}
+                />
+              )}
+            />
+
+            <FormControl
+              component="fieldset"
+              sx={{ marginBottom: 2, width: "100%" }}
+            >
+              <FormLabel component="legend" sx={labelStyle}>
+                Mong muốn tìm kiếm
+              </FormLabel>
+              <Controller
+                name="searchType"
+                control={control}
+                defaultValue=""
+                rules={{ required: "Mong muốn tìm kiếm là bắt buộc" }}
+                render={({ field }) => (
+                  <Box sx={{ display: "flex", gap: 2 }}>
+                    <Button
+                      {...field}
+                      onClick={() => field.onChange("love")}
+                      variant={
+                        field.value === "love" ? "contained" : "outlined"
+                      }
+                      startIcon={<Pets />}
+                      sx={{ flex: 1, borderRadius: "15px" }}
+                    >
+                      Bạn đời
+                    </Button>
+                    <Button
+                      {...field}
+                      onClick={() => field.onChange("friend")}
+                      variant={
+                        field.value === "friend" ? "contained" : "outlined"
+                      }
+                      startIcon={<Pets />}
+                      sx={{ flex: 1, borderRadius: "15px" }}
+                    >
+                      Giao lưu
+                    </Button>
+                  </Box>
+                )}
+              />
+            </FormControl>
+
+            <FormControl
+              component="fieldset"
+              sx={{ marginBottom: 2, width: "100%" }}
+            >
+              <FormLabel component="legend" sx={labelStyle}>
+                Hiển thị
+              </FormLabel>
+              <Controller
+                name="visibility"
+                control={control}
+                defaultValue=""
+                rules={{ required: "Hiển thị là bắt buộc" }}
+                render={({ field }) => (
+                  <Box sx={{ display: "flex", gap: 2 }}>
+                    <Button
+                      {...field}
+                      onClick={() => field.onChange("dog")}
+                      variant={field.value === "dog" ? "contained" : "outlined"}
+                      sx={{ flex: 1, borderRadius: "15px" }}
+                    >
+                      Chó
+                    </Button>
+                    <Button
+                      {...field}
+                      onClick={() => field.onChange("cat")}
+                      variant={field.value === "cat" ? "contained" : "outlined"}
+                      sx={{ flex: 1, borderRadius: "15px" }}
+                    >
+                      mèo
+                    </Button>
+                  </Box>
+                )}
+              />
+            </FormControl>
+
+            <Controller
+              name="area"
+              control={control}
+              defaultValue=""
+              rules={{ required: "Khu vực là bắt buộc" }}
+              render={({ field }) => (
+                <FormControl fullWidth sx={{ marginBottom: 2 }}>
+                  <FormLabel sx={labelStyle}>Khu vực</FormLabel>
+                  <Select {...field} displayEmpty sx={roundedStyle}>
+                    <MenuItem value="" disabled>
+                      Chọn khu vực
+                    </MenuItem>
+                    <MenuItem value="hanoi">Hà Nội</MenuItem>
+                    <MenuItem value="hochiminh">Hồ Chí Minh</MenuItem>
+                  </Select>
+                </FormControl>
+              )}
+            />
+          </Grid>
+
+          <Grid item xs={12} md={6}>
+            <FormControl fullWidth sx={{ marginBottom: 2 }}>
+              <FormLabel sx={labelStyle}>Ảnh hồ sơ</FormLabel>
+              <Input
+                type="file"
+                onChange={handleImageChange}
+                disableUnderline
+                fullWidth
+                endAdornment={
+                  <InputAdornment position="end">
+                    <CloudUpload />
+                  </InputAdornment>
+                }
+              />
+            </FormControl>
+            {images.length > 0 && (
+              <ImageList
+                sx={{ width: "100%", height: 450 }}
+                cols={3}
+                rowHeight={164}
+              >
+                {images.map((image, index) => (
+                  <ImageListItem key={index}>
+                    <img
+                      src={image.preview}
+                      alt={`Preview ${index + 1}`}
+                      loading="lazy"
+                      style={{ height: "100%", objectFit: "cover" }}
+                    />
+                    <ImageListItemBar
+                      sx={{
+                        background:
+                          "linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, " +
+                          "rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)",
+                      }}
+                      position="top"
+                      actionIcon={
+                        <IconButton
+                          sx={{ color: "white" }}
+                          onClick={() => handleRemoveImage(index)}
+                        >
+                          <Delete />
+                        </IconButton>
+                      }
+                      actionPosition="right"
+                    />
+                  </ImageListItem>
+                ))}
+              </ImageList>
+            )}
+            <Typography variant="body1">
+              Tải lên 2 bức ảnh để bắt đầu. Thêm 4 bức ảnh / video để hồ sơ của
+              bạn được nổi bật.
+            </Typography>
+            <Button
+              type="submit"
+              variant="contained"
+              size="large"
+              fullWidth
+              sx={{
+                borderRadius: "15px",
+                color: "white",
+                bgcolor: "#FDBA13",
+                marginTop: 2,
+              }}
+            >
+              LƯU HỒ SƠ{" "}
+            </Button>
+          </Grid>
+        </Grid>
+      </form>
+    </Box>
   );
 }

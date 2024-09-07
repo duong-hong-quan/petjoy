@@ -1,6 +1,7 @@
 "use client";
 import { configureStore } from "@reduxjs/toolkit";
 import counterReducer from "./features/counterSlice";
+import authReducer from "./features/authSlice";
 import { persistStore, persistReducer } from "redux-persist";
 import {
   FLUSH,
@@ -18,10 +19,12 @@ const persistConfig = {
 };
 
 const persistedReducer = persistReducer(persistConfig, counterReducer);
+const persistedAuthReducer = persistReducer(persistConfig, authReducer);
 
 export const store = configureStore({
   reducer: {
     counter: persistedReducer,
+    auth: persistedAuthReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
