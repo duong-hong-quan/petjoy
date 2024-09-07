@@ -12,14 +12,13 @@ import { Google as GoogleIcon } from "@mui/icons-material";
 import background from "../../assets/img/background.png";
 import logo from "../../assets/img/paw-logo.png";
 import { useForm, Controller } from "react-hook-form";
-import axios from "axios";
-import { LoginRequestDto } from "../../../petjoy-be/src/user/dto/login-request.dto";
 import { loginApi } from "@/api/userApi";
 import { toast } from "react-toastify";
 import { showError } from "@/utils/utility";
 import { useDispatch } from "react-redux";
 import { login } from "../redux/features/authSlice";
 import { useRouter } from "next/navigation";
+import { LoginRequestDto } from "@/type";
 export default function LoginPage() {
   const router = useRouter();
   const dispatch = useDispatch();
