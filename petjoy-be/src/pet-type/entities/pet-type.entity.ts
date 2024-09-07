@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
-import { Pet } from "@/pet/entities/pet.entity";
+import { Pet } from "../../pet/entities/pet.entity";
 
 @Entity()
 export class PetType {
