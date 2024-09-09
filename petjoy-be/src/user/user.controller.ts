@@ -14,7 +14,9 @@ import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { LoginRequestDto } from "./dto/login-request.dto";
 import { ApiBody } from "@nestjs/swagger";
+import { config as envConfig } from "dotenv";
 
+envConfig();
 @Controller("user")
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -77,6 +79,7 @@ export class UserController {
   googleAuth() {
     const clientId = process.env.CLIENT_ID;
     const redirectUri = process.env.REDIRECT_URI;
+    console.log(clientId, redirectUri);
     const scope = "email profile";
     const responseType = "code";
     const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&response_type=${responseType}`;

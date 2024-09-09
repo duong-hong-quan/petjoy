@@ -52,9 +52,12 @@ export default function LoginPage() {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get("token");
+    const tokenFromStorage = localStorage.getItem("token");
     if (token) {
-      console.log("Token:", token);
       localStorage.setItem("token", token);
+      router.push("/");
+    }
+    if (tokenFromStorage) {
       router.push("/");
     }
   }, []);
