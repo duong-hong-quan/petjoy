@@ -37,3 +37,4 @@ yarn.lock
 
 # Coverage directory
 coverage/
+config/
