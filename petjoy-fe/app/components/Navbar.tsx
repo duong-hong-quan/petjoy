@@ -159,6 +159,10 @@ function Navbar() {
                 color: "#0080ff",
                 borderRadius: 10,
                 width: 140,
+                cursor: "pointer",
+                ":hover": {
+                  cursor: "pointer",
+                },
               }}
               variant="outlined"
               onClick={() => dispatch(logout())}
@@ -177,6 +181,7 @@ function Navbar() {
                 alignItems: "center",
                 fontWeight: "bold",
               },
+              sm: { display: "flex-col" },
             }}
           >
             <Link href={"/login"}>Đăng nhập</Link>

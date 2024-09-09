@@ -1,9 +1,10 @@
 "use client";
+import { User } from "@/type";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 
 export interface AuthState {
-  user: object | null;
+  user: User | null;
 }
 
 const initialState: AuthState = {
@@ -14,7 +15,7 @@ export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    login: (state, action: PayloadAction<object>) => {
+    login: (state, action: PayloadAction<User>) => {
       state.user = action.payload;
     },
     logout: (state) => {

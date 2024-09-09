@@ -8,3 +8,14 @@ export interface AppActionResultDto {
   message: string[];
   isSuccess: boolean;
 }
+export interface User {
+  id: number;
+
+  email: string;
+
+  password: string;
+
+  name: string;
+
+  profilePicture: string;
+}

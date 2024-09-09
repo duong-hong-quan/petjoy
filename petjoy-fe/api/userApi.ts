@@ -29,6 +29,11 @@ export const getUserByEmail = async (
   } catch (error) {
     throw error;
   }
+  return {
+    data: null,
+    message: ["Call API failed"],
+    isSuccess: false,
+  } as AppActionResultDto;
 };
 export const createUser = async (data: any): Promise<AppActionResultDto> => {
   try {

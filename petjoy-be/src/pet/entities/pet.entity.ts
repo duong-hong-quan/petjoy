@@ -4,6 +4,7 @@ import {
   Column,
   ManyToOne,
   OneToMany,
+  Timestamp,
 } from "typeorm";
 import { User } from "../../user/entities/user.entity";
 import { Like } from "../../like/entities/like.entity";
@@ -18,7 +19,7 @@ export class Pet {
   name: string;
 
   @Column()
-  age: number;
+  dob: Date;
 
   @Column()
   breed: string;

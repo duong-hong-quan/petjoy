@@ -1,10 +1,11 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { Timestamp } from "typeorm";
 
 export class CreatePetDto {
   @ApiProperty({})
   name: string;
   @ApiProperty({})
-  age: number;
+  dob: Date;
   @ApiProperty({})
   breed: string;
   @ApiProperty({})
