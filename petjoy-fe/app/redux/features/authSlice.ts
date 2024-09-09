@@ -1,5 +1,6 @@
 "use client";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { toast } from "react-toastify";
 
 export interface AuthState {
   user: object | null;
@@ -18,6 +19,8 @@ export const authSlice = createSlice({
     },
     logout: (state) => {
       state.user = null;
+      localStorage.removeItem("token");
+      toast.success("Đăng xuất thành công");
     },
   },
 });

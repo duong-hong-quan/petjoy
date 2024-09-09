@@ -10,7 +10,9 @@ import { MatchModule } from "./match/match.module";
 import { LikeModule } from "./like/like.module";
 import { UserModule } from "./user/user.module";
 import { config as envConfig } from "dotenv";
-import { PetTypeModule } from './pet-type/pet-type.module';
+import { PetTypeModule } from "./pet-type/pet-type.module";
+import { FirebaseAuthGuard } from "./config/firebase-auth-guard";
+import { JwtService } from "@nestjs/jwt";
 envConfig();
 
 @Module({
@@ -34,6 +36,6 @@ envConfig();
     PetTypeModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, FirebaseAuthGuard, JwtService],
 })
 export class AppModule {}

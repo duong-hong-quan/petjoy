@@ -12,13 +12,18 @@ import { Google as GoogleIcon } from "@mui/icons-material";
 import background from "../../assets/img/background.png";
 import logo from "../../assets/img/paw-logo.png";
 import { useForm, Controller } from "react-hook-form";
-import { loginApi } from "@/api/userApi";
+import { createUser, getUserByEmail, loginApi } from "@/api/userApi";
 import { toast } from "react-toastify";
-import { showError } from "@/utils/utility";
+import { parseJwt, showError } from "@/utils/utility";
 import { useDispatch } from "react-redux";
 import { login } from "../redux/features/authSlice";
 import { useRouter } from "next/navigation";
 import { LoginRequestDto } from "@/type";
+import { auth, googleProvider } from "../../firebase/firebase";
+import { signInWithPopup } from "firebase/auth";
+import { useEffect } from "react";
+import jwtDecode from "jwt-decode";
+
 export default function LoginPage() {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -32,14 +37,59 @@ export default function LoginPage() {
     try {
       const response = await loginApi(data);
       if (response.isSuccess) {
-        dispatch(login(response.data));
+        window.location.href = response.data.url;
+        dispatch(login(response.data.user));
+        console.log("response", response);
         toast.success("Đăng nhập thành công");
-        router.push("/");
       } else {
         showError(response.message);
       }
     } catch (error) {
       showError(["Call API failed"]);
+    }
+  };
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get("token");
+    if (token) {
+      console.log("Token:", token);
+      localStorage.setItem("token", token);
+      router.push("/");
+    }
+  }, []);
+  const handleGoogleLogin = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
+      localStorage.setItem("token", user.accessToken);
+      try {
+        const decodedToken = parseJwt(user.accessToken);
+        if (decodedToken) {
+          const response = await getUserByEmail(decodedToken.email);
+          if (response.isSuccess) {
+            dispatch(login(response.data));
+          } else {
+            const response = await createUser({
+              email: decodedToken.email,
+              password: "google123@",
+              name: decodedToken.name,
+              profilePicture: "",
+            });
+            if (response.isSuccess) {
+              dispatch(login(response.data));
+            } else {
+              showError(response.message);
+            }
+          }
+        }
+      } catch (error) {
+        console.error("Invalid token:", error);
+      }
+      toast.success("Đăng nhập bằng Google thành công");
+      router.push("/");
+    } catch (error) {
+      showError(["Google login failed"]);
     }
   };
 
@@ -60,6 +110,23 @@ export default function LoginPage() {
       }}
     >
       <Box>
+        <Button
+          onClick={() => {
+            const token = localStorage.getItem("token");
+            if (token) {
+              try {
+                const decodedToken = parseJwt(token);
+                console.log("Decoded Token:", decodedToken);
+              } catch (error) {
+                console.error("Invalid token:", error);
+              }
+            } else {
+              console.error("Token not found");
+            }
+          }}
+        >
+          Decode token
+        </Button>
         <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
           <Image src={logo.src} alt="Paw logo" width={50} height={50} />
         </Box>
@@ -150,6 +217,7 @@ export default function LoginPage() {
             borderRadius: "20px",
           }}
           style={{ borderRadius: "20px" }}
+          onClick={handleGoogleLogin}
         >
           Tiếp tục bằng Gmail
         </Button>

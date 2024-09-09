@@ -1,4 +1,10 @@
-import { Injectable } from "@nestjs/common";
+import {
+  ExecutionContext,
+  Get,
+  Injectable,
+  Query,
+  Redirect,
+} from "@nestjs/common";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { Repository } from "typeorm";
@@ -6,6 +12,9 @@ import { User } from "./entities/user.entity";
 import { LoginRequestDto } from "./dto/login-request.dto";
 import { AppActionResultDto } from "../common/dto/app-action-result.dto";
 import { InjectRepository } from "@nestjs/typeorm";
+import { buildError } from "@/common/utility";
+import { firebaseAdmin } from "@/config/firebase-admin";
+import axios from "axios";
 
 @Injectable()
 export class UserService {
@@ -71,5 +80,61 @@ export class UserService {
       message: data ? ["Login success"] : ["Login failed"],
       isSuccess: !!data,
     };
+  }
+
+  async getUserByEmail(email: string): Promise<AppActionResultDto> {
+    const data = await this.repository.findOne({ where: { email } });
+    if (!data) {
+      return buildError("User not found");
+    }
+    return {
+      data,
+      message: ["Data retrieved successfully"],
+      isSuccess: true,
+    };
+  }
+  async signUpWithGoogleToken(token: string): Promise<AppActionResultDto> {
+    if (!token) {
+      return buildError("Token not found");
+    }
+
+    const decodedToken = await firebaseAdmin.auth().verifyIdToken(token);
+    console.log("decodedToken", decodedToken);
+    try {
+      const { email, name, picture } = decodedToken;
+
+      const newUser = new User();
+      newUser.email = email;
+      newUser.name = name;
+      newUser.password = "google123@";
+      newUser.profilePicture = picture;
+
+      const createdUser = await this.create(newUser);
+      return {
+        data: createdUser.data,
+        message: ["User created successfully"],
+        isSuccess: true,
+      };
+    } catch (error) {
+      return buildError(error.message);
+    }
+  }
+
+  async getGoogleTokens(code: string) {
+    const clientId =
+      "729364707171-5n9093hp5a9951q89mknr3hioei7r2es.apps.googleusercontent.com";
+    const clientSecret = "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";
+    const redirectUri = "http://localhost:5001/user/google/callback";
+    const tokenUrl = "https://oauth2.googleapis.com/token";
+    const response = await axios.post(tokenUrl, {
+      code,
+      client_id: clientId,
+      client_secret: clientSecret,
+      redirect_uri: redirectUri,
+      grant_type: "authorization_code",
+    });
+
+    const { id_token } = response.data;
+    return { id_token };
   }
 }
