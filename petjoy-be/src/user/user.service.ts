@@ -121,10 +121,9 @@ export class UserService {
   }
 
   async getGoogleTokens(code: string) {
-    const clientId =
-      "729364707171-5n9093hp5a9951q89mknr3hioei7r2es.apps.googleusercontent.com";
-    const clientSecret = "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";
-    const redirectUri = "http://localhost:5001/user/google/callback";
+    const clientId = process.env.CLIENT_ID;
+    const clientSecret = process.env.CLIENT_SECRET;
+    const redirectUri = process.env.REDIRECT_URI;
     const tokenUrl = "https://oauth2.googleapis.com/token";
     const response = await axios.post(tokenUrl, {
       code,

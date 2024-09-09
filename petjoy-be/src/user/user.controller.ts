@@ -75,9 +75,8 @@ export class UserController {
   @Get("google")
   @Redirect()
   googleAuth() {
-    const clientId =
-      "729364707171-5n9093hp5a9951q89mknr3hioei7r2es.apps.googleusercontent.com";
-    const redirectUri = "http://localhost:5001/user/google/callback";
+    const clientId = process.env.CLIENT_ID;
+    const redirectUri = process.env.REDIRECT_URI;
     const scope = "email profile";
     const responseType = "code";
     const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&response_type=${responseType}`;
