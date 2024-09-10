@@ -2,7 +2,9 @@ import { ApiProperty } from "@nestjs/swagger";
 
 export class CreateLikeDto {
   @ApiProperty({})
-  userId: number;
+  originPetId: number;
   @ApiProperty({})
-  petId: number;
+  likePetId: number;
+  @ApiProperty({})
+  isLike: boolean;
 }

@@ -161,8 +161,8 @@ const PetRegistrationForm = () => {
                     <Box sx={{ display: "flex", gap: 2 }}>
                       <Button
                         {...field}
-                        onClick={() => field.onChange("0")}
-                        variant={field.value === "0" ? "contained" : "outlined"}
+                        onClick={() => field.onChange("1")}
+                        variant={field.value === "1" ? "contained" : "outlined"}
                         startIcon={<Pets />}
                         sx={{ flex: 1, borderRadius: "15px" }}
                       >
@@ -170,8 +170,8 @@ const PetRegistrationForm = () => {
                       </Button>
                       <Button
                         {...field}
-                        onClick={() => field.onChange("1")}
-                        variant={field.value === "1" ? "contained" : "outlined"}
+                        onClick={() => field.onChange("2")}
+                        variant={field.value === "2" ? "contained" : "outlined"}
                         startIcon={<Pets />}
                         sx={{ flex: 1, borderRadius: "15px" }}
                       >

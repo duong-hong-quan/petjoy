@@ -20,7 +20,7 @@ export const LoadingOverlay = ({ loading }: LoadingOverlayProps) => {
           justifyContent: "center",
           alignItems: "center",
           backgroundColor: "rgba(255, 255, 255, 0.8)",
-          zIndex: 9999,
+          zIndex: 50,
         }}
       >
         <CircularProgress />

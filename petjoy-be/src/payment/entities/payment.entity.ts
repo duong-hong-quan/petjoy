@@ -7,6 +7,11 @@ export class Payment {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column()
+  userId: number;
+  @Column()
+  paymentPackageId: number;
+
   @ManyToOne(() => User, (user) => user.payments)
   user: User;
 

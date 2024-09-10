@@ -18,7 +18,6 @@ const useCallApi = <T>(api: AxiosInstance) => {
   ): Promise<AppActionResultDto> => {
     setLoading(true);
     try {
-      debugger;
       let result;
       switch (method) {
         case "GET":

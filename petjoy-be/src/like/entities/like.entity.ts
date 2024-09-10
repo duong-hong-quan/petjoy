@@ -6,13 +6,15 @@ import { User } from "../../user/entities/user.entity";
 export class Like {
   @PrimaryGeneratedColumn()
   id: number;
-
-  @ManyToOne(() => Pet, (pet) => pet.likes)
-  pet: Pet;
-
-  @ManyToOne(() => User, (user) => user.pets)
-  user: User;
-
+  @Column()
+  originPetId: number;
+  @Column()
+  likePetId: number;
   @Column({ default: false })
-  isMatch: boolean;
+  isLike: boolean;
+  @ManyToOne(() => Pet, (pet) => pet.likes)
+  originPet: Pet;
+
+  @ManyToOne(() => Pet, (pet) => pet.beLikes)
+  likePet: Pet;
 }

@@ -7,6 +7,7 @@ import { AppActionResultDto } from "../common/dto/app-action-result.dto";
 import { User } from "../user/entities/user.entity";
 import { Pet } from "../pet/entities/pet.entity";
 import { InjectRepository } from "@nestjs/typeorm";
+import { buildError } from "@/common/utility";
 
 @Injectable()
 export class LikeService {
@@ -19,29 +20,52 @@ export class LikeService {
     private readonly petRepository: Repository<Pet>
   ) {}
   async create(createLikeDto: CreateLikeDto): Promise<AppActionResultDto> {
-    const user = await this.userRepository.findOne({
-      where: { id: createLikeDto.userId },
-    });
-    const pet = await this.petRepository.findOne({
-      where: { id: createLikeDto.petId },
-    });
-    if (!user || !pet) {
+    try {
+      const orignPet = await this.repository.find({
+        where: {
+          id: createLikeDto.originPetId,
+        },
+      });
+      const likePetDb = await this.repository.find({
+        where: {
+          id: createLikeDto.likePetId,
+        },
+      });
+      if (!orignPet || !likePetDb) {
+        return buildError("Not found");
+      }
+      const likeDb = await this.repository.findOne({
+        where: {
+          originPetId: createLikeDto.originPetId,
+          likePetId: createLikeDto.likePetId,
+        },
+      });
+      if (likeDb) {
+        return buildError("You already like this pet");
+      }
+      const like = await this.repository.create(createLikeDto);
+      await this.repository.save(like);
+      const data = await this.repository.findOne({
+        where: {
+          originPetId: createLikeDto.likePetId,
+          likePetId: createLikeDto.originPetId,
+        },
+      });
+      if (data) {
+        return {
+          data: like,
+          message: ["Matchingggg"],
+          isSuccess: true,
+        };
+      }
       return {
-        data: null,
-        message: ["User or Pet not found"],
-        isSuccess: false,
+        data: like,
+        message: ["Like created successfully"],
+        isSuccess: true,
       };
+    } catch (error) {
+      return buildError(error.message);
     }
-    const like = await this.repository.create({
-      user,
-      pet,
-    });
-    await this.repository.save(like);
-    return {
-      data: like,
-      message: ["Like created successfully"],
-      isSuccess: true,
-    };
   }
 
   async findAll(): Promise<AppActionResultDto> {

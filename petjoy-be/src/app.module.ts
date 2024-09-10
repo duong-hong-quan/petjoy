@@ -5,8 +5,6 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { PetModule } from "./pet/pet.module";
 import { PaymentModule } from "./payment/payment.module";
 import { PaymentPackageModule } from "./payment-package/payment-package.module";
-import { MessageModule } from "./message/message.module";
-import { MatchModule } from "./match/match.module";
 import { LikeModule } from "./like/like.module";
 import { UserModule } from "./user/user.module";
 import { config as envConfig } from "dotenv";
@@ -27,10 +25,8 @@ envConfig();
       autoLoadEntities: true,
     }),
     PetModule,
-    MatchModule,
     UserModule,
     LikeModule,
-    MessageModule,
     PaymentPackageModule,
     PaymentModule,
     PetTypeModule,

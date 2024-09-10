@@ -27,11 +27,26 @@ export class Pet {
   @Column()
   profilePicture: string;
 
+  @Column({})
+  ownerId?: number;
+
+  @Column()
+  petTypeId: number;
+
+  @Column()
+  filterPetTypeId: number;
+
+  @Column()
+  isHiringPetTypeId: number;
+
   @ManyToOne(() => User, (user) => user.pets)
   owner: User;
 
-  @OneToMany(() => Like, (like) => like.pet)
+  @OneToMany(() => Like, (like) => like.likePet)
   likes: Like[];
+
+  @OneToMany(() => Like, (like) => like.originPet)
+  beLikes: Like[];
 
   @ManyToOne(() => PetType, (petType) => petType.hiringPetTypes)
   petType: PetType;
