@@ -114,3 +114,18 @@ export interface PetType {
 
   filterPetTypes: Pet[];
 }
+export interface Chat {
+  id: number;
+  petOneId: number;
+  petTwoId: number;
+  createdAt: string;
+}
+
+// models/Message.ts
+export interface Message {
+  id: number;
+  content: string;
+  chatId: number;
+  senderId: number;
+  sentAt: number;
+}

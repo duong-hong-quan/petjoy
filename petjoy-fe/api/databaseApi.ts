@@ -13,7 +13,7 @@ export const createEntity = async (path: string, data: any) => {
 };
 export const filterData = (data: any, field: string, value: any) => {
   const filteredData = Object.entries(data).filter(([key, obj]: any) => {
-    return obj[field] === value;
+    return obj[key] === value;
   });
   return Object.fromEntries(filteredData);
 };

@@ -51,15 +51,19 @@ export class LikeService {
           likePetId: createLikeDto.originPetId,
         },
       });
+      const fullLike = await this.repository.findOne({
+        where: { id: like.id },
+        relations: ["originPet", "likePet"], // Adjust the relations as per your entity
+      });
       if (data) {
         return {
-          data: like,
+          data: fullLike,
           message: ["Matchingggg"],
           isSuccess: true,
         };
       }
       return {
-        data: like,
+        data: fullLike,
         message: ["Like created successfully"],
         isSuccess: true,
       };

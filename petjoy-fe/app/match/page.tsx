@@ -34,6 +34,8 @@ import useCallApi from "@/api/callApi";
 import api from "@/api/config";
 import { toast } from "react-toastify";
 import MatchSurprise from "../components/MatchSurprise";
+import { createEntity } from "@/api/databaseApi";
+import { useRouter } from "next/navigation";
 const MatchPage = () => {
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [swipePosition, setSwipePosition] = useState(0);
@@ -47,7 +49,7 @@ const MatchPage = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedPet, setSelectedPet] = useState<number>();
   const [open, setOpen] = useState(false);
-
+  const route = useRouter();
   const handleClick = async (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
     const response = await callApi(`/pet/by-user-id/${user?.id}`, "GET");
@@ -97,6 +99,16 @@ const MatchPage = () => {
       fetchData();
       if (response.message.includes("Matchingggg")) {
         setOpen(true);
+        await createEntity("room", [
+          {
+            id: response.data.id,
+            petOneId: selectedPet,
+            petTwoId: currentPet.id,
+            createdAt: new Date().toDateString(),
+            petOne: response.data.originPet,
+            petTwo: response.data.likePet,
+          },
+        ]);
       }
     }
   };
@@ -411,6 +423,9 @@ const MatchPage = () => {
                     borderColor: "black",
                     fontWeight: "bold",
                     "&:hover": { backgroundColor: "#f0f0f0" },
+                  }}
+                  onClick={() => {
+                    route.push("/chat");
                   }}
                 >
                   Trò chuyện
