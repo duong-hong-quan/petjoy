@@ -26,9 +26,18 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/app/redux/store";
 import { LoadingOverlay } from "@/app/components/LoadingOverlay";
 import AuthWrapper from "@/app/auth-route/AuthWrapper";
+import { storage } from "@/firebase/firebase";
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  deleteObject,
+} from "firebase/storage";
+
 interface Image {
   file: File;
   preview: string;
+  url?: string;
 }
 
 const PetRegistrationForm = () => {
@@ -42,20 +51,30 @@ const PetRegistrationForm = () => {
   const [images, setImages] = useState<Image[]>([]);
   const user = useSelector((state: RootState) => state.auth.user || null);
   const onSubmit = async (data: any) => {
-    debugger;
     if (user) {
-      const response = await callApi("pet", "POST", {
-        name: data.name,
-        dob: data.dob,
-        breed: data.breed,
-        profilePicture: "string",
-        ownerId: user.id,
-        petTypeId: Number(data.petTypeId),
-        isHiringPetTypeId: Number(data.isHiringPetTypeId),
-        filterPetTypeId: Number(data.filterPetTypeId),
-      });
-      if (response.isSuccess) {
-        toast.success("Hồ sơ thú cưng đã được tạo");
+      const uploadedImages = await Promise.all(
+        images.map(async (image) => {
+          const storageRef = ref(storage, `images/${image.file.name}`);
+          await uploadBytes(storageRef, image.file);
+          const url = await getDownloadURL(storageRef);
+          return url;
+        })
+      );
+      debugger;
+      if (user) {
+        const response = await callApi("pet", "POST", {
+          name: data.name,
+          dob: data.dob,
+          breed: data.breed,
+          profilePicture: uploadedImages[0] || "string",
+          ownerId: user.id,
+          petTypeId: Number(data.petTypeId),
+          isHiringPetTypeId: Number(data.isHiringPetTypeId),
+          filterPetTypeId: Number(data.filterPetTypeId),
+        });
+        if (response.isSuccess) {
+          toast.success("Hồ sơ thú cưng đã được tạo");
+        }
       }
     }
   };
@@ -69,7 +88,12 @@ const PetRegistrationForm = () => {
     setImages((prevImages) => [...prevImages, ...newImages]);
   };
 
-  const handleRemoveImage = (index: number) => {
+  const handleRemoveImage = async (index: number) => {
+    const imageToRemove = images[index];
+    if (imageToRemove.url) {
+      const storageRef = ref(storage, imageToRemove.url);
+      await deleteObject(storageRef);
+    }
     setImages((prevImages) => prevImages.filter((_, i) => i !== index));
   };
   // Custom styles for rounded corners and labels
