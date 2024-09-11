@@ -9,22 +9,22 @@ import {
   Divider,
 } from "@mui/material";
 import { Google as GoogleIcon } from "@mui/icons-material";
-import background from "../../assets/img/background.png";
-import logo from "../../assets/img/paw-logo.png";
+import background from "../../../assets/img/background.png";
+import logo from "../../../assets/img/paw-logo.png";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
 import { parseJwt, showError } from "@/utils/utility";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "../redux/features/authSlice";
+import { login } from "../../redux/features/authSlice";
 import { useRouter } from "next/navigation";
 import { LoginRequestDto } from "@/type";
-import { auth, googleProvider } from "../../firebase/firebase";
+import { auth, googleProvider } from "../../../firebase/firebase";
 import { signInWithPopup } from "firebase/auth";
 import { useEffect } from "react";
-import useCallApi from "../../api/callApi";
+import useCallApi from "../../../api/callApi";
 import api from "@/api/config";
-import { LoadingOverlay } from "../components/LoadingOverlay";
-import { RootState } from "../redux/store";
+import { LoadingOverlay } from "../../components/LoadingOverlay";
+import { RootState } from "../../redux/store";
 
 export default function LoginPage() {
   const { error, loading, callApi } = useCallApi(api);

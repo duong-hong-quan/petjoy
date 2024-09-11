@@ -46,12 +46,12 @@ function Navbar() {
         <ListItem component={Link} href="/">
           <ListItemText primary="Trang chủ" />
         </ListItem>
-        <ListItem component={Link} href="/match">
+        <ListItem component={Link} href="/user/match">
           <ListItemText primary="Match" />
         </ListItem>
         {user ? (
           <>
-            <ListItem component={Link} href="/">
+            <ListItem component={Link} href="/user/profile">
               <ListItemText primary="Hồ sơ" />
             </ListItem>
             <ListItem onClick={() => dispatch(logout())}>
@@ -61,17 +61,23 @@ function Navbar() {
         ) : (
           <Box
             sx={{
-              display: "flex",
+              display: {
+                sm: "flex-col",
+              },
               alignItems: "center",
               justifyContent: "center",
-              gap: 2,
-              marginTop: 4,
+              gap: {
+                md: 2,
+              },
+              marginTop: {
+                md: 4,
+              },
             }}
           >
-            <ListItem component={Link} href="/login">
+            <ListItem component={Link} href="/user/login">
               <ListItemText primary="Đăng nhập" />
             </ListItem>
-            <ListItem component={Link} href="/register">
+            <ListItem component={Link} href="/user/register">
               <ListItemText primary="Đăng ký" />
             </ListItem>
           </Box>
@@ -121,21 +127,11 @@ function Navbar() {
               textDecoration: "none",
               fontSize: "1rem",
               fontWeight: "bold",
+              display: "inline-block",
+              margin: " 0 12px",
             }}
           >
             Trang chủ
-          </Link>
-          <Link
-            href={"/match"}
-            style={{
-              color: "white",
-              textDecoration: "none",
-              fontSize: "1rem",
-              fontWeight: "bold",
-              marginRight: 20,
-            }}
-          >
-            Match
           </Link>
         </Box>
         {user ? (
@@ -143,7 +139,19 @@ function Navbar() {
             sx={{ display: { xs: "none", md: "flex" }, alignItems: "center" }}
           >
             <Link
-              href={"/"}
+              href={"/user/match"}
+              style={{
+                color: "white",
+                textDecoration: "none",
+                fontSize: "1rem",
+                fontWeight: "bold",
+                marginRight: 20,
+              }}
+            >
+              Match
+            </Link>
+            <Link
+              href={"/user/profile"}
               style={{
                 color: "white",
                 textDecoration: "none",
@@ -184,12 +192,12 @@ function Navbar() {
                 justifyContent: "space-between",
                 alignItems: "center",
                 fontWeight: "bold",
+                sm: { display: "flex-col" },
               },
-              sm: { display: "flex-col" },
             }}
           >
-            <Link href={"/login"}>Đăng nhập</Link>
-            <Button
+            <Link href={"/user/login"}>Đăng nhập</Link>
+            {/* <Button
               color="inherit"
               variant="outlined"
               sx={{
@@ -201,7 +209,7 @@ function Navbar() {
               }}
             >
               Đăng ký
-            </Button>
+            </Button> */}
           </Box>
         )}
       </Toolbar>

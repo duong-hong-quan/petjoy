@@ -1,0 +1,302 @@
+"use client";
+import useCallApi from "@/api/callApi";
+import api from "@/api/config";
+import { LoadingOverlay } from "@/app/components/LoadingOverlay";
+import PackageCards from "@/app/components/PackageCard";
+import { PaymentPackage } from "@/type";
+import {
+  Typography,
+  TextField,
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  SelectChangeEvent,
+} from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { toast } from "react-toastify";
+
+const ManagementPaymentPackage = () => {
+  const { callApi, loading } = useCallApi(api);
+  const [packages, setPackages] = useState<PaymentPackage[]>([]);
+  const [open, setOpen] = useState(false);
+  const [selectedPackage, setSelectedPackage] = useState<PaymentPackage | null>(
+    null
+  );
+  const [formData, setFormData] = useState({
+    name: "",
+    price: 0,
+    description: "",
+    duration: 0,
+  } as PaymentPackage);
+
+  const fetchData = async () => {
+    const data = await callApi("/payment-package", "GET");
+    if (data.isSuccess) {
+      setPackages(data.data);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+  const handleSelectChange = (event: SelectChangeEvent<number>) => {
+    setFormData({ ...formData, duration: event.target.value as number });
+  };
+
+  const handleOpen = (pkg: PaymentPackage | null = null) => {
+    setSelectedPackage(pkg);
+    setFormData(
+      pkg
+        ? ({
+            name: pkg.name,
+            price: pkg.price,
+            description: pkg.description,
+            duration: pkg.duration,
+          } as PaymentPackage)
+        : ({
+            name: "",
+            price: 0,
+            description: "",
+            duration: 0,
+          } as PaymentPackage)
+    );
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedPackage(null);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async () => {
+    if (selectedPackage) {
+      const response = await callApi(
+        `/payment-package/${selectedPackage.id}`,
+        "PUT",
+        formData
+      );
+      if (response.isSuccess) {
+        toast.success("Update successfully");
+      }
+    } else {
+      const response2 = await callApi("/payment-package", "POST", formData);
+      if (response2.isSuccess) {
+        toast.success("Update successfully");
+      }
+    }
+    fetchData();
+    handleClose();
+  };
+
+  return (
+    <Box sx={{ padding: 3, minHeight: "100vh" }}>
+      {!loading ? (
+        <>
+          <Typography
+            variant="h4"
+            gutterBottom
+            sx={{
+              textAlign: "center",
+              color: "#007EFF",
+              fontWeight: "bold",
+              marginBottom: 4,
+              textTransform: "uppercase",
+              letterSpacing: 1,
+            }}
+          >
+            CÁC GÓI ĐĂNG KÝ TẠI PETJOY
+          </Typography>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "flex-end",
+              marginBottom: 4,
+              gap: 2,
+            }}
+          >
+            <TextField
+              variant="filled"
+              label="Tìm kiếm gói"
+              sx={{
+                "& .MuiFilledInput-root": {
+                  backgroundColor: "white",
+                  "&:hover": {
+                    backgroundColor: "white",
+                  },
+                  "&.Mui-focused": {
+                    backgroundColor: "white",
+                  },
+                },
+                "& .MuiInputLabel-root": {
+                  color: "black",
+                  "&.Mui-focused": {
+                    color: "black",
+                  },
+                },
+                "& .MuiFilledInput-underline:before": {
+                  borderBottomColor: "black",
+                },
+                "& .MuiFilledInput-underline:after": {
+                  borderBottomColor: "black",
+                },
+              }}
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => handleOpen()}
+            >
+              Thêm Gói Mới
+            </Button>
+          </Box>
+          <PackageCards packages={packages} onSelect={handleOpen} />
+          <Dialog open={open} onClose={handleClose}>
+            <DialogTitle>
+              {selectedPackage ? "Cập Nhật Gói" : "Tạo Gói Mới"}
+            </DialogTitle>
+            <DialogContent>
+              <TextField
+                autoFocus
+                margin="dense"
+                name="name"
+                label="Tên Gói"
+                type="text"
+                fullWidth
+                variant="outlined"
+                value={formData.name}
+                onChange={handleChange}
+                sx={{
+                  "& .MuiFilledInput-root": {
+                    backgroundColor: "white",
+                    "&:hover": {
+                      backgroundColor: "white",
+                    },
+                    "&.Mui-focused": {
+                      backgroundColor: "white",
+                    },
+                  },
+                  "& .MuiInputLabel-root": {
+                    color: "black",
+                    "&.Mui-focused": {
+                      color: "black",
+                    },
+                  },
+                  "& .MuiFilledInput-underline:before": {
+                    borderBottomColor: "black",
+                  },
+                  "& .MuiFilledInput-underline:after": {
+                    borderBottomColor: "black",
+                  },
+                }}
+              />
+              <FormControl fullWidth margin="dense">
+                <InputLabel id="duration-label">Thời Gian</InputLabel>
+                <Select
+                  labelId="duration-label"
+                  name="duration"
+                  value={formData.duration}
+                  onChange={handleSelectChange}
+                  label="Thời Gian"
+                >
+                  <MenuItem value={0}>Tuần</MenuItem>
+                  <MenuItem value={1}>Tháng</MenuItem>
+                </Select>
+              </FormControl>
+              <TextField
+                autoFocus
+                margin="dense"
+                name="description"
+                label="Mô tả"
+                type="text"
+                fullWidth
+                variant="outlined"
+                value={formData.description}
+                onChange={handleChange}
+                sx={{
+                  "& .MuiFilledInput-root": {
+                    backgroundColor: "white",
+                    "&:hover": {
+                      backgroundColor: "white",
+                    },
+                    "&.Mui-focused": {
+                      backgroundColor: "white",
+                    },
+                  },
+                  "& .MuiInputLabel-root": {
+                    color: "black",
+                    "&.Mui-focused": {
+                      color: "black",
+                    },
+                  },
+                  "& .MuiFilledInput-underline:before": {
+                    borderBottomColor: "black",
+                  },
+                  "& .MuiFilledInput-underline:after": {
+                    borderBottomColor: "black",
+                  },
+                }}
+              />
+
+              <TextField
+                margin="dense"
+                name="price"
+                label="Giá"
+                type="number"
+                fullWidth
+                variant="outlined"
+                value={formData.price}
+                onChange={handleChange}
+                sx={{
+                  "& .MuiFilledInput-root": {
+                    backgroundColor: "white",
+                    "&:hover": {
+                      backgroundColor: "white",
+                    },
+                    "&.Mui-focused": {
+                      backgroundColor: "white",
+                    },
+                  },
+                  "& .MuiInputLabel-root": {
+                    color: "black",
+                    "&.Mui-focused": {
+                      color: "black",
+                    },
+                  },
+                  "& .MuiFilledInput-underline:before": {
+                    borderBottomColor: "black",
+                  },
+                  "& .MuiFilledInput-underline:after": {
+                    borderBottomColor: "black",
+                  },
+                }}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose} color="secondary">
+                Hủy
+              </Button>
+              <Button onClick={handleSubmit} color="secondary">
+                {selectedPackage ? "Cập Nhật" : "Tạo Mới"}
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </>
+      ) : (
+        <LoadingOverlay loading={loading} />
+      )}
+    </Box>
+  );
+};
+
+export default ManagementPaymentPackage;

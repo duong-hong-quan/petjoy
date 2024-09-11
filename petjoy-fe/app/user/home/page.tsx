@@ -13,8 +13,8 @@ import {
   Link,
 } from "@mui/material";
 import { styled } from "@mui/system";
-import background from "../../assets/img/background.png";
-import dogcat from "../../assets/img/dogcat.png";
+import background from "../../../assets/img/background.png";
+import dogcat from "../../../assets/img/dogcat.png";
 export default function HomePage() {
   return (
     <>

@@ -23,7 +23,7 @@ import {
   Send as SendIcon,
   ArrowBack as ArrowBackIcon,
 } from "@mui/icons-material";
-import { RootState } from "../redux/store";
+import { RootState } from "../../redux/store";
 import { createEntity, getEntity } from "@/api/databaseApi";
 import { useRouter } from "next/navigation";
 import { Message, Room } from "@/type";
@@ -183,7 +183,7 @@ const PetProfileChat = () => {
                 "&:hover": { backgroundColor: "#0056b3" },
                 textWrap: "nowrap",
               }}
-              onClick={() => route.push("/match")}
+              onClick={() => route.push("/user/match")}
             >
               Lượt thích
             </Button>
@@ -199,7 +199,7 @@ const PetProfileChat = () => {
                 textWrap: "nowrap",
               }}
               onClick={() => {
-                route.push("/chat");
+                route.push("/user/chat");
               }}
             >
               Trò chuyện

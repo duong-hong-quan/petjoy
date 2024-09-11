@@ -24,15 +24,15 @@ import {
 } from "@mui/material";
 import { useSwipeable } from "react-swipeable";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../redux/store";
+import { RootState } from "../../redux/store";
 import { Pet } from "@/type";
 import useCallApi from "@/api/callApi";
 import api from "@/api/config";
-import MatchSurprise from "../components/MatchSurprise";
+import MatchSurprise from "../../components/MatchSurprise";
 import { createEntity, getEntity } from "@/api/databaseApi";
 import { useRouter } from "next/navigation";
-import { Room } from "../../type";
-import { setPet } from "../redux/features/authSlice";
+import { Room } from "../../../type";
+import { setPet } from "../../redux/features/authSlice";
 import Link from "next/link";
 const MatchPage = () => {
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
@@ -443,7 +443,7 @@ const MatchPage = () => {
                     "&:hover": { backgroundColor: "#f0f0f0" },
                   }}
                   onClick={() => {
-                    route.push("/chat");
+                    route.push("/user/chat");
                   }}
                 >
                   Trò chuyện
@@ -535,7 +535,10 @@ const MatchPage = () => {
                   ))}
               </Select>
             </FormControl>
-            <Link className="text-blue-700 ml-1 mt-10" href={"/pet/pet-create"}>
+            <Link
+              className="text-blue-700 ml-1 mt-10"
+              href={"/user/pet/pet-create"}
+            >
               Tạo mới hồ sơ
             </Link>
           </Box>

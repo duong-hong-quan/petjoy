@@ -15,7 +15,7 @@ export class Pet {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ type: "text", default: "" })
   name: string;
 
   @Column()

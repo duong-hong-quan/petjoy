@@ -13,7 +13,7 @@ export class User {
   @Column()
   password: string;
 
-  @Column({ default: "" })
+  @Column({ type: "text", default: "" })
   name: string;
 
   @Column({ default: "" })
