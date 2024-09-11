@@ -256,7 +256,10 @@ const MatchPage = () => {
                         }}
                       >
                         <IconButton
-                          onClick={() => handleSwipe("left")}
+                          onClick={async () => {
+                            handleSwipe("left");
+                            await handleSwipeApi("left");
+                          }}
                           sx={{
                             backgroundColor: "white",
                             "&:hover": { backgroundColor: "#f5f5f5" },
@@ -273,7 +276,10 @@ const MatchPage = () => {
                           />
                         </IconButton>
                         <IconButton
-                          onClick={() => handleSwipe("right")}
+                          onClick={async () => {
+                            handleSwipe("right");
+                            await handleSwipeApi("right");
+                          }}
                           sx={{
                             backgroundColor: "white",
                             "&:hover": { backgroundColor: "#f5f5f5" },
