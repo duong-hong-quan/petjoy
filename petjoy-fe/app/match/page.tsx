@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { CheckCircleOutline, Close, Favorite } from "@mui/icons-material";
-import ArrowDropDownCircleIcon from "@mui/icons-material/ArrowDropDownCircle";
+import ArrowDropDownCircleOutlinedIcon from "@mui/icons-material/ArrowDropDownCircleOutlined";
 import {
   Avatar,
   Box,
@@ -372,10 +372,9 @@ const MatchPage = () => {
                 </Typography>
                 <div className="relative">
                   <IconButton onClick={handleClick}>
-                    <ArrowDropDownCircleIcon
+                    <ArrowDropDownCircleOutlinedIcon
                       sx={{
                         fontSize: "2.5rem",
-                        color: "black",
                       }}
                     />
                   </IconButton>
