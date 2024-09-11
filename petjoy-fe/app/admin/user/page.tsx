@@ -60,7 +60,7 @@ function ManagementUser() {
   }, [searchTerm]);
 
   return (
-    <Box sx={{ padding: 3, minHeight: "100vh" }}>
+    <Box sx={{ padding: 3 }}>
       {!loading ? (
         <>
           <Typography
@@ -90,32 +90,9 @@ function ManagementUser() {
               label="Tìm kiếm người dùng"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              sx={{
-                "& .MuiFilledInput-root": {
-                  backgroundColor: "white",
-                  "&:hover": {
-                    backgroundColor: "white",
-                  },
-                  "&.Mui-focused": {
-                    backgroundColor: "white",
-                  },
-                },
-                "& .MuiInputLabel-root": {
-                  color: "black",
-                  "&.Mui-focused": {
-                    color: "black",
-                  },
-                },
-                "& .MuiFilledInput-underline:before": {
-                  borderBottomColor: "black",
-                },
-                "& .MuiFilledInput-underline:after": {
-                  borderBottomColor: "black",
-                },
-              }}
             />
           </Box>
-          <TableContainer
+          {/* <TableContainer
             sx={{
               padding: "20px",
               borderRadius: "8px",
@@ -192,7 +169,7 @@ function ManagementUser() {
                 </TableBody>
               </Table>
             </Box>
-          </TableContainer>
+          </TableContainer> */}
         </>
       ) : (
         <LoadingOverlay loading={loading} />
