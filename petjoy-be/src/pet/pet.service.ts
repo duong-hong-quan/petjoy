@@ -6,7 +6,7 @@ import { In, Not, Repository } from "typeorm";
 import { AppActionResultDto } from "../common/dto/app-action-result.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Like } from "../like/entities/like.entity";
-import { buildError } from "@/common/utility";
+import { buildError } from "../common/utility";
 
 @Injectable()
 export class PetService {

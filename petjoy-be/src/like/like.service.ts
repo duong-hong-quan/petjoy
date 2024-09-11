@@ -7,7 +7,7 @@ import { AppActionResultDto } from "../common/dto/app-action-result.dto";
 import { User } from "../user/entities/user.entity";
 import { Pet } from "../pet/entities/pet.entity";
 import { InjectRepository } from "@nestjs/typeorm";
-import { buildError } from "@/common/utility";
+import { buildError } from "../common/utility";
 
 @Injectable()
 export class LikeService {
