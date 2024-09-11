@@ -33,6 +33,7 @@ import { createEntity, getEntity } from "@/api/databaseApi";
 import { useRouter } from "next/navigation";
 import { Room } from "../../type";
 import { setPet } from "../redux/features/authSlice";
+import Link from "next/link";
 const MatchPage = () => {
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [swipePosition, setSwipePosition] = useState(0);
@@ -509,9 +510,6 @@ const MatchPage = () => {
                 }
                 label="Pet của tôi"
               >
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
                 {petsOfMe.length > 0 &&
                   petsOfMe.map((item: Pet) => (
                     <MenuItem
@@ -531,6 +529,9 @@ const MatchPage = () => {
                   ))}
               </Select>
             </FormControl>
+            <Link className="text-blue-700 ml-1 mt-10" href={"/pet/pet-create"}>
+              Tạo mới hồ sơ
+            </Link>
           </Box>
         )}
       </>

@@ -127,23 +127,6 @@ export default function LoginPage() {
       }}
     >
       <Box>
-        <Button
-          onClick={() => {
-            const token = localStorage.getItem("token");
-            if (token) {
-              try {
-                const decodedToken = parseJwt(token);
-                console.log("Decoded Token:", decodedToken);
-              } catch (error) {
-                console.error("Invalid token:", error);
-              }
-            } else {
-              console.error("Token not found");
-            }
-          }}
-        >
-          Decode token
-        </Button>
         <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
           <Image src={logo.src} alt="Paw logo" width={50} height={50} />
         </Box>
