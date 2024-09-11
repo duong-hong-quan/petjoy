@@ -119,75 +119,79 @@ function ManagementUser() {
             sx={{
               padding: "20px",
               borderRadius: "8px",
+              width: "100%",
+              overflowX: "auto",
             }}
           >
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell
-                    align="center"
-                    sx={{ fontWeight: "bold", fontSize: "1.1rem" }}
-                  >
-                    Avatar
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    sx={{ fontWeight: "bold", fontSize: "1.1rem" }}
-                  >
-                    Tên
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    sx={{ fontWeight: "bold", fontSize: "1.1rem" }}
-                  >
-                    Email
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    sx={{ fontWeight: "bold", fontSize: "1.1rem" }}
-                  >
-                    Hành động
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {filteredUsers.map((user) => (
-                  <TableRow key={user.id} hover>
+            <Box sx={{ minWidth: 650 }}>
+              <Table>
+                <TableHead>
+                  <TableRow>
                     <TableCell
                       align="center"
-                      sx={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
+                      sx={{ fontWeight: "bold", fontSize: "1.1rem" }}
                     >
-                      <Avatar
-                        src={user.profilePicture}
-                        sx={{
-                          width: 50,
-                          height: 50,
-                          border: "2px solid #007EFF",
-                        }}
-                      />
+                      Avatar
                     </TableCell>
-                    <TableCell align="center">{user.name}</TableCell>
-                    <TableCell align="center">{user.email}</TableCell>
-                    <TableCell align="center">
-                      <Button
-                        variant="contained"
-                        sx={{
-                          backgroundColor: "#007EFF",
-                          color: "white",
-                        }}
-                        onClick={() => {}}
-                      >
-                        Ban
-                      </Button>
+                    <TableCell
+                      align="center"
+                      sx={{ fontWeight: "bold", fontSize: "1.1rem" }}
+                    >
+                      Tên
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      sx={{ fontWeight: "bold", fontSize: "1.1rem" }}
+                    >
+                      Email
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      sx={{ fontWeight: "bold", fontSize: "1.1rem" }}
+                    >
+                      Hành động
                     </TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHead>
+                <TableBody>
+                  {filteredUsers.map((user) => (
+                    <TableRow key={user.id} hover>
+                      <TableCell
+                        align="center"
+                        sx={{
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Avatar
+                          src={user.profilePicture}
+                          sx={{
+                            width: 50,
+                            height: 50,
+                            border: "2px solid #007EFF",
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell align="center">{user.name}</TableCell>
+                      <TableCell align="center">{user.email}</TableCell>
+                      <TableCell align="center">
+                        <Button
+                          variant="contained"
+                          sx={{
+                            backgroundColor: "#007EFF",
+                            color: "white",
+                          }}
+                          onClick={() => {}}
+                        >
+                          Ban
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </Box>
           </TableContainer>
         </>
       ) : (
