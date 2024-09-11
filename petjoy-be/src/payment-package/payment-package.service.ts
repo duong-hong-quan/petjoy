@@ -57,6 +57,7 @@ export class PaymentPackageService {
       });
       if (data) {
         Object.assign(data, updatePaymentPackageDto);
+        await this.repository.save(data);
         return {
           data,
           isSuccess: true,

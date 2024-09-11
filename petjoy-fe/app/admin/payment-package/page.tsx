@@ -46,27 +46,19 @@ const ManagementPaymentPackage = () => {
   useEffect(() => {
     fetchData();
   }, []);
+
   const handleSelectChange = (event: SelectChangeEvent<number>) => {
-    setFormData({ ...formData, duration: event.target.value as number });
+    setFormData({ ...formData, duration: Number(event.target.value) });
   };
 
-  const handleOpen = (pkg: PaymentPackage | null = null) => {
+  const handleOpen = (pkg: PaymentPackage) => {
     setSelectedPackage(pkg);
-    setFormData(
-      pkg
-        ? ({
-            name: pkg.name,
-            price: pkg.price,
-            description: pkg.description,
-            duration: pkg.duration,
-          } as PaymentPackage)
-        : ({
-            name: "",
-            price: 0,
-            description: "",
-            duration: 0,
-          } as PaymentPackage)
-    );
+    setFormData({
+      name: pkg.name,
+      price: pkg.price,
+      description: pkg.description,
+      duration: pkg.duration,
+    } as PaymentPackage);
     setOpen(true);
   };
 
@@ -87,11 +79,6 @@ const ManagementPaymentPackage = () => {
         formData
       );
       if (response.isSuccess) {
-        toast.success("Update successfully");
-      }
-    } else {
-      const response2 = await callApi("/payment-package", "POST", formData);
-      if (response2.isSuccess) {
         toast.success("Update successfully");
       }
     }
@@ -152,19 +139,10 @@ const ManagementPaymentPackage = () => {
                 },
               }}
             />
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => handleOpen()}
-            >
-              Thêm Gói Mới
-            </Button>
           </Box>
           <PackageCards packages={packages} onSelect={handleOpen} />
           <Dialog open={open} onClose={handleClose}>
-            <DialogTitle>
-              {selectedPackage ? "Cập Nhật Gói" : "Tạo Gói Mới"}
-            </DialogTitle>
+            <DialogTitle>Cập Nhật Gói</DialogTitle>
             <DialogContent>
               <TextField
                 autoFocus
@@ -176,30 +154,9 @@ const ManagementPaymentPackage = () => {
                 variant="outlined"
                 value={formData.name}
                 onChange={handleChange}
-                sx={{
-                  "& .MuiFilledInput-root": {
-                    backgroundColor: "white",
-                    "&:hover": {
-                      backgroundColor: "white",
-                    },
-                    "&.Mui-focused": {
-                      backgroundColor: "white",
-                    },
-                  },
-                  "& .MuiInputLabel-root": {
-                    color: "black",
-                    "&.Mui-focused": {
-                      color: "black",
-                    },
-                  },
-                  "& .MuiFilledInput-underline:before": {
-                    borderBottomColor: "black",
-                  },
-                  "& .MuiFilledInput-underline:after": {
-                    borderBottomColor: "black",
-                  },
-                }}
+                disabled
               />
+
               <FormControl fullWidth margin="dense">
                 <InputLabel id="duration-label">Thời Gian</InputLabel>
                 <Select
@@ -208,6 +165,7 @@ const ManagementPaymentPackage = () => {
                   value={formData.duration}
                   onChange={handleSelectChange}
                   label="Thời Gian"
+                  disabled
                 >
                   <MenuItem value={0}>Tuần</MenuItem>
                   <MenuItem value={1}>Tháng</MenuItem>
@@ -223,31 +181,7 @@ const ManagementPaymentPackage = () => {
                 variant="outlined"
                 value={formData.description}
                 onChange={handleChange}
-                sx={{
-                  "& .MuiFilledInput-root": {
-                    backgroundColor: "white",
-                    "&:hover": {
-                      backgroundColor: "white",
-                    },
-                    "&.Mui-focused": {
-                      backgroundColor: "white",
-                    },
-                  },
-                  "& .MuiInputLabel-root": {
-                    color: "black",
-                    "&.Mui-focused": {
-                      color: "black",
-                    },
-                  },
-                  "& .MuiFilledInput-underline:before": {
-                    borderBottomColor: "black",
-                  },
-                  "& .MuiFilledInput-underline:after": {
-                    borderBottomColor: "black",
-                  },
-                }}
               />
-
               <TextField
                 margin="dense"
                 name="price"
@@ -257,29 +191,6 @@ const ManagementPaymentPackage = () => {
                 variant="outlined"
                 value={formData.price}
                 onChange={handleChange}
-                sx={{
-                  "& .MuiFilledInput-root": {
-                    backgroundColor: "white",
-                    "&:hover": {
-                      backgroundColor: "white",
-                    },
-                    "&.Mui-focused": {
-                      backgroundColor: "white",
-                    },
-                  },
-                  "& .MuiInputLabel-root": {
-                    color: "black",
-                    "&.Mui-focused": {
-                      color: "black",
-                    },
-                  },
-                  "& .MuiFilledInput-underline:before": {
-                    borderBottomColor: "black",
-                  },
-                  "& .MuiFilledInput-underline:after": {
-                    borderBottomColor: "black",
-                  },
-                }}
               />
             </DialogContent>
             <DialogActions>
@@ -287,7 +198,7 @@ const ManagementPaymentPackage = () => {
                 Hủy
               </Button>
               <Button onClick={handleSubmit} color="secondary">
-                {selectedPackage ? "Cập Nhật" : "Tạo Mới"}
+                Cập Nhật
               </Button>
             </DialogActions>
           </Dialog>

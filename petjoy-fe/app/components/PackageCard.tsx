@@ -1,7 +1,5 @@
-import React, { useState } from "react";
-import { Card, Grid, Typography } from "@mui/material";
-import { styled } from "@mui/system";
-import { Theme } from "@mui/material/styles";
+import React from "react";
+import { Box, Card, Grid, Typography, Button } from "@mui/material";
 import { PaymentPackage } from "../../type";
 
 interface PackageCardsProps {
@@ -9,53 +7,76 @@ interface PackageCardsProps {
   onSelect: (selectedPackage: PaymentPackage) => void;
 }
 
-const StyledCard = styled(Card)(({ theme }: { theme: Theme }) => ({
-  height: "100%",
-  display: "flex",
-  flexDirection: "column",
-  transition: "transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
-  "&:hover": {
-    transform: "translateY(-5px)",
-    boxShadow: theme.shadows[4],
-  },
-}));
-
 const PackageCards = ({ packages, onSelect }: PackageCardsProps) => {
-  const [selectedPackage, setSelectedPackage] = useState<number | null>(null);
-
-  const handleSelect = (pkg: PaymentPackage) => {
-    setSelectedPackage(pkg.id);
-    onSelect(pkg);
-  };
-
   return (
     <Grid container spacing={3}>
       {packages.map((pkg) => (
-        <Grid item xs={12} sm={6} key={pkg.id}>
-          <StyledCard
-            variant="outlined"
+        <Grid item xs={12} sm={6} md={4} key={pkg.id}>
+          <Card
             sx={{
-              borderColor:
-                selectedPackage === pkg.id ? "primary.main" : "grey.300",
+              height: "100%",
+              display: "flex",
+              flexDirection: "column",
+              transition: "all 0.3s ease-in-out",
+              "&:hover": {
+                transform: "translateY(-10px)",
+                boxShadow: "0 12px 20px rgba(0, 0, 0, 0.1)",
+              },
+              borderRadius: "16px",
+              overflow: "hidden",
+              position: "relative",
             }}
-            onClick={() => handleSelect(pkg)}
           >
-            <Typography variant="h5" component="div" gutterBottom>
-              {pkg.name}
-            </Typography>
-            <Typography
-              variant="h4"
+            <Box
               sx={{
-                color: "black",
+                background: (theme) =>
+                  `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.secondary.main} 90%)`,
+                p: 3,
+                color: "white",
               }}
-              gutterBottom
             >
-              {parseInt(pkg.price).toLocaleString()} ₫
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {pkg.description}
-            </Typography>
-          </StyledCard>
+              <Typography
+                variant="h5"
+                component="div"
+                gutterBottom
+                fontWeight="bold"
+              >
+                {pkg.name}
+              </Typography>
+              <Typography
+                variant="h4"
+                sx={{
+                  fontWeight: "bold",
+                  textShadow: "2px 2px 4px rgba(0,0,0,0.3)",
+                }}
+                gutterBottom
+              >
+                {parseInt(pkg.price.toString()).toLocaleString()} ₫
+              </Typography>
+            </Box>
+            <Box sx={{ p: 3, flexGrow: 1 }}>
+              <Typography variant="body1" color="text.secondary">
+                {pkg.description}
+              </Typography>
+            </Box>
+            <Button
+              variant="contained"
+              fullWidth
+              sx={{
+                mt: "auto",
+                py: 1.5,
+                fontSize: "1.1rem",
+                fontWeight: "bold",
+                textTransform: "none",
+                "&:hover": {
+                  transform: "scale(1.05)",
+                },
+              }}
+              onClick={() => onSelect(pkg)}
+            >
+              Chọn Gói
+            </Button>
+          </Card>
         </Grid>
       ))}
     </Grid>

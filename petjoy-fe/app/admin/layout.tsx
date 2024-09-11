@@ -47,13 +47,7 @@ const menuItems = [
 ];
 
 // Create a custom theme with the #007EFF color
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: "#F4F7FF",
-    },
-  },
-});
+const theme = createTheme({});
 
 function AdminLayout({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
@@ -87,18 +81,12 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
                 easing: theme.transitions.easing.sharp,
                 duration: theme.transitions.duration.leavingScreen,
               }),
-            ...(open && {
-              marginLeft: drawerWidth,
-              width: `calc(100% - ${drawerWidth}px)`,
-              transition: (theme) =>
-                theme.transitions.create(["width", "margin"], {
-                  easing: theme.transitions.easing.sharp,
-                  duration: theme.transitions.duration.enteringScreen,
-                }),
-            }),
+            marginLeft: open ? `${drawerWidth}px` : 0,
+            width: open ? `calc(95% - ${drawerWidth}px)` : "100%",
             borderRadius: "300px",
             marginTop: "10px",
             boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
+            backgroundColor: "white",
           }}
         >
           <Toolbar
@@ -109,7 +97,6 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
             }}
           >
             <IconButton
-              color="inherit"
               aria-label="open drawer"
               onClick={handleDrawerToggle}
               edge="start"
@@ -120,14 +107,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
             >
               <MenuIcon />
             </IconButton>
-            <Typography
-              variant="h6"
-              noWrap
-              component="div"
-              sx={{
-                color: "#007EFF",
-              }}
-            >
+            <Typography variant="h6" noWrap sx={{ color: "#007EFF" }}>
               Hello Admin
             </Typography>
             <Box>
