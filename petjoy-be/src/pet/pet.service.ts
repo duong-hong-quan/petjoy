@@ -90,7 +90,6 @@ export class PetService {
       });
 
       const likedPetObjects = likedPets.map((item) => item.originPet);
-      console.log(likedPetObjects);
       if (likedPetObjects.length > 0) {
         return {
           data: likedPetObjects,

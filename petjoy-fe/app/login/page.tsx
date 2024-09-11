@@ -43,7 +43,6 @@ export default function LoginPage() {
       if (response.isSuccess) {
         window.location.href = response.data.url;
         dispatch(login(response.data.user));
-        console.log("response", response);
         toast.success("Đăng nhập thành công");
       } else {
         if (error) {

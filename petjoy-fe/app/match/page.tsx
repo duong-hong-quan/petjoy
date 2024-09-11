@@ -1,11 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import {
-  AddCircleOutlineOutlined,
-  CheckCircleOutline,
-  Close,
-  Favorite,
-} from "@mui/icons-material";
+import { CheckCircleOutline, Close, Favorite } from "@mui/icons-material";
+import ArrowDropDownCircleIcon from "@mui/icons-material/ArrowDropDownCircle";
 import {
   Avatar,
   Box,
@@ -27,15 +23,16 @@ import {
   Select,
 } from "@mui/material";
 import { useSwipeable } from "react-swipeable";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/store";
-import { Like, Pet } from "@/type";
+import { Pet } from "@/type";
 import useCallApi from "@/api/callApi";
 import api from "@/api/config";
-import { toast } from "react-toastify";
 import MatchSurprise from "../components/MatchSurprise";
-import { createEntity } from "@/api/databaseApi";
+import { createEntity, getEntity } from "@/api/databaseApi";
 import { useRouter } from "next/navigation";
+import { Room } from "../../type";
+import { setPet } from "../redux/features/authSlice";
 const MatchPage = () => {
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [swipePosition, setSwipePosition] = useState(0);
@@ -50,6 +47,8 @@ const MatchPage = () => {
   const [selectedPet, setSelectedPet] = useState<number>();
   const [open, setOpen] = useState(false);
   const route = useRouter();
+  const pet = useSelector((state: RootState) => state.auth.pet || null);
+  const dispatch = useDispatch();
   const handleClick = async (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
     const response = await callApi(`/pet/by-user-id/${user?.id}`, "GET");
@@ -99,16 +98,31 @@ const MatchPage = () => {
       fetchData();
       if (response.message.includes("Matchingggg")) {
         setOpen(true);
-        await createEntity("room", [
-          {
-            id: response.data.id,
-            petOneId: selectedPet,
-            petTwoId: currentPet.id,
-            createdAt: new Date().toDateString(),
-            petOne: response.data.originPet,
-            petTwo: response.data.likePet,
-          },
-        ]);
+        const roomData = (await getEntity("/room")) as Room[];
+        if (roomData.length == 0) {
+          await createEntity("room", [
+            {
+              id: response.data.id,
+              petOneId: selectedPet,
+              petTwoId: currentPet.id,
+              createdAt: new Date().toDateString(),
+              petOne: response.data.originPet,
+              petTwo: response.data.likePet,
+            },
+          ] as Room[]);
+        } else {
+          await createEntity("room", [
+            ...roomData,
+            {
+              id: response.data.id,
+              petOneId: selectedPet,
+              petTwoId: currentPet.id,
+              createdAt: new Date().toDateString(),
+              petOne: response.data.originPet,
+              petTwo: response.data.likePet,
+            },
+          ] as Room[]);
+        }
       }
     }
   };
@@ -119,13 +133,6 @@ const MatchPage = () => {
       setPetsOfMe(response.data);
     }
     if (selectedPet) {
-      // const responsePetData = await callApi(
-      //   `pet/get-all-pet/${user?.id}?petId=${selectedPet}`,
-      //   "GET"
-      // );
-      // if (responsePetData.isSuccess) {
-      //   setPets(responsePetData.data);
-      // }
       const responseLikes = await callApi(
         `pet/get-likes/${selectedPet}`,
         "GET"
@@ -164,6 +171,11 @@ const MatchPage = () => {
     fetchData();
   }, [selectedPet]);
 
+  useEffect(() => {
+    if (pet) {
+      setSelectedPet(pet.id);
+    }
+  }, []);
   const calculateAge = (dob: string): string => {
     const birthDate = new Date(dob);
     const today = new Date();
@@ -356,14 +368,14 @@ const MatchPage = () => {
                   sx={{ width: 56, height: 56 }}
                 />
                 <Typography variant="h5" flex={1} fontWeight="bold">
-                  Xin chào {user?.name}
+                  Xin chào {pet?.name}
                 </Typography>
                 <div className="relative">
                   <IconButton onClick={handleClick}>
-                    <AddCircleOutlineOutlined
+                    <ArrowDropDownCircleIcon
                       sx={{
-                        color: "black",
                         fontSize: "2.5rem",
+                        color: "black",
                       }}
                     />
                   </IconButton>
@@ -386,9 +398,9 @@ const MatchPage = () => {
                           key={item.id}
                           onClick={() => {
                             setSelectedPet(item.id);
+                            dispatch(setPet(item));
                             handleClose();
                           }}
-                          className="w-40"
                         >
                           <Avatar src={item.profilePicture} />
                           <span className="mx-4"> {item.name}</span>
@@ -508,6 +520,7 @@ const MatchPage = () => {
                       onClick={() => {
                         setSelectedPet(item.id);
                         handleClose();
+                        dispatch(setPet(item));
                       }}
                     >
                       <Avatar src={item.profilePicture} />

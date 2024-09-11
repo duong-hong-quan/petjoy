@@ -16,12 +16,13 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 function Navbar() {
   const user = useSelector((state: RootState) => state.auth.user);
   const dispatch = useDispatch();
   const [drawerOpen, setDrawerOpen] = useState(false);
-
+  const router = useRouter();
   const toggleDrawer =
     (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
       if (
@@ -165,7 +166,10 @@ function Navbar() {
                 },
               }}
               variant="outlined"
-              onClick={() => dispatch(logout())}
+              onClick={() => {
+                dispatch(logout());
+                router.push("/");
+              }}
             >
               Đăng xuất
             </Button>

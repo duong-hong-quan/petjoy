@@ -102,7 +102,6 @@ export class UserService {
     }
 
     const decodedToken = await firebaseAdmin.auth().verifyIdToken(token);
-    console.log("decodedToken", decodedToken);
     try {
       const { email, name, picture } = decodedToken;
 

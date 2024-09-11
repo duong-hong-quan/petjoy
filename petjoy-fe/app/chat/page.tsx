@@ -1,13 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import {
-  ref,
-  query,
-  orderByChild,
-  limitToLast,
-  onValue,
-  push,
-} from "firebase/database";
+import { ref, onValue } from "firebase/database";
 import { database } from "@/firebase/firebase";
 import { useSelector } from "react-redux";
 import {
@@ -22,72 +15,71 @@ import {
   Snackbar,
   CardMedia,
   IconButton,
-  Container,
+  Stack,
+  Avatar,
+  Card,
 } from "@mui/material";
 import {
   Send as SendIcon,
   ArrowBack as ArrowBackIcon,
 } from "@mui/icons-material";
 import { RootState } from "../redux/store";
-import { createEntity, filterData, getEntity } from "@/api/databaseApi";
-
+import { createEntity, getEntity } from "@/api/databaseApi";
+import { useRouter } from "next/navigation";
+import { Message, Room } from "@/type";
+import CloseIcon from "@mui/icons-material/Close";
 const PetProfileChat = () => {
-  const petData = {
-    id: 12,
-    name: "Soju",
-    dob: "2024-06-04T17:00:00.000Z",
-    breed: "poodle",
-    profilePicture:
-      "https://firebasestorage.googleapis.com/v0/b/petjoy-31ffe.appspot.com/o/images%2FScreenshot%202024-09-09%20at%2012.38.50.png?alt=media&token=c1c4b719-5410-47c0-8ddc-61a432647a53",
-    petType: {
-      id: 1,
-      name: "Chó",
-    },
-  };
   const user = useSelector((state: RootState) => state.auth.user);
-
+  const route = useRouter();
   const [showSidebar, setShowSidebar] = useState(true);
-  const [messages, setMessages] = useState<
-    { text: string; userId: string; timestamp: number }[]
-  >([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const userId = useSelector((state: RootState) => state.auth.user?.id);
   const messageListRef = useRef<HTMLUListElement>(null);
-  const [rooms, setRooms] = useState<any[]>([]);
-  const [selectedRoom, setSelectedRoom] = useState<null>(null);
-  console.log(rooms);
+  const [rooms, setRooms] = useState<Room[]>([]);
+  const [selectedRoom, setSelectedRoom] = useState<Room | null>();
+  const pet = useSelector((state: RootState) => state.auth.pet || null);
   useEffect(() => {
     const roomsRef = ref(database, "room");
     onValue(roomsRef, (snapshot) => {
       const data = snapshot.val();
-      console.log("data", data);
 
       if (data) {
-        const dataFilter = (data as any[]).filter(
+        const dataFilter = (data as Room[]).filter(
           (i) => i.petOne.ownerId === user?.id || i.petTwo.ownerId === user?.id
         );
-        console.log("dataFilter", dataFilter);
-        setRooms(data);
+        setRooms(dataFilter);
       }
     });
   }, [user]);
+  const handleSelectedRoom = async (room: Room) => {
+    setSelectedRoom(room);
+    const response = (await getEntity(`chat`)) as Message[];
+    debugger;
+    if (room !== undefined) {
+      const dataFilter = response.filter((i) => i.room === room?.id);
+      setMessages(dataFilter);
+    } else {
+      setMessages([]);
+    }
+  };
+
   useEffect(() => {
-    if (!userId || !petData.id) return;
+    if (!userId) return;
 
     const roomsRef = ref(database, "chat");
     onValue(roomsRef, (snapshot) => {
-      const data = snapshot.val();
-      // const roomsList = data ? Object.values(data) : [];
-      // const dataFilter = filterData(roomsList, "petOneId", 5);
-      // setRooms(data);
-      console.log("data", data);
-
-      // const dataFilter = data.filter((i)=> i.)
-      setMessages(data);
+      const data = snapshot.val() as Message[];
+      if (selectedRoom) {
+        const dataFilter = data.filter((i) => i.room === selectedRoom?.id);
+        setMessages(dataFilter);
+      } else {
+        setMessages([]);
+      }
     });
-  }, [userId, petData.id]);
+  }, [userId, selectedRoom?.id]);
 
   useEffect(() => {
     if (messageListRef.current) {
@@ -104,18 +96,18 @@ const PetProfileChat = () => {
           text: newMessage.trim(),
           userId,
           timestamp: Date.now(),
-          room: selectedRoom,
+          room: selectedRoom?.id,
         },
-      ]);
+      ] as Message[]);
     } else {
       await createEntity(`chat`, [
         {
           text: newMessage.trim(),
           userId,
           timestamp: Date.now(),
-          room: selectedRoom,
+          room: selectedRoom?.id,
         },
-      ]);
+      ] as Message[]);
     }
 
     setNewMessage("");
@@ -128,15 +120,12 @@ const PetProfileChat = () => {
     }
   };
 
-  if (!petData) {
-    return <Typography>No pet data available.</Typography>;
-  }
   return (
     <Box
       sx={{
         display: "flex",
-        height: "100dvh",
         backgroundColor: "background.default",
+        marginTop: "3rem",
       }}
     >
       <Paper
@@ -161,24 +150,68 @@ const PetProfileChat = () => {
             }),
           maxHeight: "80vh",
           overflowY: "scroll",
+          borderRight: "1px solid #ccc",
+          boxShadow: "none",
         }}
       >
         <Box sx={{ padding: 2 }}>
-          <Typography
-            variant="h6"
-            sx={{
-              fontWeight: "bold",
-              textAlign: "center",
-            }}
+          <Stack
+            direction="row"
+            spacing={2}
+            gap={2}
+            mb={3}
+            alignItems={"center"}
           >
-            Danh sách
-          </Typography>
+            <Avatar src={user?.profilePicture}></Avatar>
+            <Typography
+              sx={{
+                fontWeight: "bold",
+              }}
+            >
+              {" "}
+              Hello {pet?.name}
+            </Typography>
+          </Stack>
+          <Stack direction="row" spacing={2} mb={3}>
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: "#007EFF",
+                borderRadius: "20px",
+                px: 3,
+                fontWeight: "bold",
+                "&:hover": { backgroundColor: "#0056b3" },
+                textWrap: "nowrap",
+              }}
+              onClick={() => route.push("/match")}
+            >
+              Lượt thích
+            </Button>
+            <Button
+              variant="outlined"
+              sx={{
+                borderRadius: "20px",
+                px: 3,
+                color: "black",
+                borderColor: "black",
+                fontWeight: "bold",
+                "&:hover": { backgroundColor: "#f0f0f0" },
+                textWrap: "nowrap",
+              }}
+              onClick={() => {
+                route.push("/chat");
+              }}
+            >
+              Trò chuyện
+            </Button>
+          </Stack>
+          <hr />
           <List>
             {rooms?.map((room, index) => (
               <ListItem
                 key={index}
                 onClick={() => {
-                  setSelectedRoom(room.id);
+                  handleSelectedRoom(room);
                   setShowSidebar(false);
                 }}
               >
@@ -222,19 +255,89 @@ const PetProfileChat = () => {
           flex: 1,
           display: "flex",
           flexDirection: "column",
-          position: "relative",
-          maxHeight: "80vh",
-          overflowY: "scroll",
+          // position: "relative",
         }}
       >
-        {!showSidebar && (
-          <IconButton
-            sx={{ position: "absolute", top: 1, left: 1, zIndex: 2 }}
-            onClick={() => setShowSidebar(true)}
-          >
-            <ArrowBackIcon />
-          </IconButton>
-        )}
+        <Card
+          sx={{
+            display: "flex",
+            boxShadow: "none",
+            borderBottom: "1px solid #ccc",
+            padding: "10px",
+            alignItems: "center",
+          }}
+        >
+          {!showSidebar && (
+            <IconButton onClick={() => setShowSidebar(true)}>
+              <ArrowBackIcon />
+            </IconButton>
+          )}
+          {selectedRoom ? (
+            <>
+              <Box
+                sx={{
+                  position: "relative",
+                  display: "inline-block",
+                }}
+              >
+                <Avatar
+                  src={
+                    selectedRoom?.petOne?.ownerId === user?.id
+                      ? selectedRoom?.petTwo?.profilePicture
+                      : selectedRoom?.petOne?.profilePicture
+                  }
+                  sx={{
+                    margin: "0 15px",
+                  }}
+                />
+                <Box
+                  sx={{
+                    position: "absolute",
+                    bottom: 0,
+                    right: 10,
+                    width: 22,
+                    height: 22,
+                    backgroundColor: "green",
+                    borderRadius: "50%",
+                    border: "2px solid white", // Optional: to add a white border around the green circle
+                  }}
+                />
+              </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  flexGrow: 1,
+                }}
+              >
+                <Typography
+                  sx={{
+                    fontWeight: "bold",
+                    fontSize: "1.2rem",
+                  }}
+                >
+                  {selectedRoom?.petOne?.ownerId === user?.id
+                    ? selectedRoom?.petTwo?.name
+                    : selectedRoom?.petOne?.name}
+                </Typography>
+                <Typography>Đang hoạt động</Typography>
+              </Box>
+              <IconButton onClick={() => setSelectedRoom(null)}>
+                <CloseIcon />
+              </IconButton>
+            </>
+          ) : (
+            <Typography
+              sx={{
+                marginLeft: "15px",
+                fontSize: "1.2rem",
+              }}
+            >
+              No content
+            </Typography>
+          )}
+        </Card>
+
         {loading ? (
           <Box
             sx={{
@@ -247,80 +350,95 @@ const PetProfileChat = () => {
             <CircularProgress />
           </Box>
         ) : (
-          <List
+          <Box
             sx={{
-              flex: 1,
-              overflowY: "auto",
-              padding: 2,
+              maxHeight: "80vh",
+              overflowY: "scroll",
+              height: "530px",
             }}
             ref={messageListRef}
           >
-            {messages?.length > 0 &&
-              messages?.map((message, index) => (
-                <ListItem
-                  key={index}
-                  sx={{
-                    display: "flex",
-                    justifyContent:
-                      Number(message.userId) === userId
-                        ? "flex-end"
-                        : "flex-start",
-                    marginBottom: 1,
-                  }}
-                >
-                  <Box
+            <List
+              sx={{
+                flex: 1,
+                overflowY: "auto",
+                padding: 2,
+              }}
+            >
+              {messages?.length > 0 &&
+                messages?.map((message, index) => (
+                  <ListItem
+                    key={index}
                     sx={{
-                      backgroundColor:
+                      display: "flex",
+                      justifyContent:
                         Number(message.userId) === userId
-                          ? "primary.main"
-                          : "grey.300",
-                      color:
-                        Number(message.userId) === userId
-                          ? "primary.contrastText"
-                          : "text.primary",
-                      borderRadius: 1,
-                      padding: 1,
-                      maxWidth: "70%",
-                      wordBreak: "break-word",
+                          ? "flex-end"
+                          : "flex-start",
+                      marginBottom: 1,
                     }}
                   >
-                    <Typography variant="body1">{message.text}</Typography>
-                    <Typography variant="caption" color="textSecondary">
-                      {new Date(message.timestamp).toLocaleTimeString()}
-                    </Typography>
-                  </Box>
-                </ListItem>
-              ))}
-          </List>
+                    <Box
+                      sx={{
+                        backgroundColor:
+                          Number(message.userId) === userId
+                            ? "#007EFF"
+                            : "#F1F1F1",
+                        color:
+                          Number(message.userId) === userId ? "white" : "black",
+                        borderRadius: "20px", // Apply border radius here
+                        padding: 1,
+                        maxWidth: "70%",
+                        wordBreak: "break-word",
+                      }}
+                    >
+                      <Typography variant="body1">{message.text}</Typography>
+                      <Typography
+                        sx={{
+                          color:
+                            Number(message.userId) === userId
+                              ? "white"
+                              : "black",
+                          fontSize: "0.7rem",
+                        }}
+                      >
+                        {new Date(message.timestamp).toLocaleTimeString()}
+                      </Typography>
+                    </Box>
+                  </ListItem>
+                ))}
+            </List>
+          </Box>
         )}
         <Box
           sx={{
             display: "flex",
             padding: 2,
-            borderTop: 1,
-            borderColor: "divider",
             backgroundColor: "background.paper",
           }}
         >
           <TextField
-            sx={{ flexGrow: 1, marginRight: 1 }}
+            sx={{
+              flexGrow: 1,
+              marginRight: 1,
+            }}
+            InputProps={{
+              style: {
+                borderRadius: "20px",
+                backgroundColor: "#F1F1F1",
+                color: "black",
+              },
+            }}
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Type a message"
             variant="outlined"
             size="small"
             multiline
             maxRows={3}
+            placeholder="Nhập tin nhắn..."
           />
-          <Button
-            onClick={handleSendMessage}
-            variant="contained"
-            color="primary"
-            endIcon={<SendIcon />}
-          >
-            Send
-          </Button>
+          <Button onClick={handleSendMessage} endIcon={<SendIcon />}></Button>
         </Box>
       </Box>
 

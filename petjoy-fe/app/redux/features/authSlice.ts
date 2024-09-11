@@ -1,14 +1,18 @@
 "use client";
+
+import { Pet } from "./../../../type";
 import { User } from "@/type";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-
 export interface AuthState {
   user: User | null;
+  pet: Pet | null;
 }
 
 const initialState: AuthState = {
   user: null,
+  pet: null,
 };
 
 export const authSlice = createSlice({
@@ -20,11 +24,15 @@ export const authSlice = createSlice({
     },
     logout: (state) => {
       state.user = null;
+      state.pet = null;
       localStorage.removeItem("token");
       toast.success("Đăng xuất thành công");
+    },
+    setPet: (state, action: PayloadAction<Pet>) => {
+      state.pet = action.payload;
     },
   },
 });
 
-export const { login, logout } = authSlice.actions;
+export const { login, logout, setPet } = authSlice.actions;
 export default authSlice.reducer;

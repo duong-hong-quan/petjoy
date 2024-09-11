@@ -71,7 +71,6 @@ export class UserController {
 
   @Get("email/:email")
   getUserByEmail(@Param("email") email: string) {
-    console.log(email);
     return this.userService.getUserByEmail(email);
   }
   @Get("google")
@@ -79,11 +78,9 @@ export class UserController {
   googleAuth() {
     const clientId = process.env.CLIENT_ID;
     const redirectUri = process.env.REDIRECT_URI;
-    console.log(clientId, redirectUri);
     const scope = "email profile";
     const responseType = "code";
     const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&response_type=${responseType}`;
-    console.log(authUrl);
     return { url: authUrl };
   }
   @Get("google/callback")
