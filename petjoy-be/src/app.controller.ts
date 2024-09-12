@@ -10,9 +10,9 @@ export class AppController {
   // getHello(): string {
   //   return this.appService.getHello();
   // }
-  @Get()
-  @UseGuards(FirebaseAuthGuard)
-  getProtectedResource() {
-    return { message: "This is a protected resource" };
-  }
+  // @Get()
+  // @UseGuards(FirebaseAuthGuard)
+  // getProtectedResource() {
+  //   return { message: "This is a protected resource" };
+  // }
 }
