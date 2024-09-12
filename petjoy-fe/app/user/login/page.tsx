@@ -81,6 +81,9 @@ export default function LoginPage() {
           if (response) {
             if (response.isSuccess) {
               dispatch(login(response.data));
+              document.cookie = `isAdmin=${
+                response.data.isAdmin
+              }; path=/; max-age=${7 * 24 * 60 * 60}; secure; samesite=strict`;
             } else {
               const response = await callApi("user", "POST", {
                 email: decodedToken.email,
@@ -90,6 +93,11 @@ export default function LoginPage() {
               });
               if (response?.isSuccess) {
                 dispatch(login(response.data));
+                document.cookie = `isAdmin=${
+                  response.data.isAdmin
+                }; path=/; max-age=${
+                  7 * 24 * 60 * 60
+                }; secure; samesite=strict`;
               } else {
                 if (error) {
                   showError(error);

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useLayoutEffect } from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import {
   Box,
@@ -27,11 +27,13 @@ import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import PeopleIcon from "@mui/icons-material/People";
 import Link from "next/link";
 import PaymentsOutlinedIcon from "@mui/icons-material/PaymentsOutlined";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 const drawerWidth = 240;
 
@@ -248,7 +250,6 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
     </ThemeProvider>
   );
 }
-
 export default function RootLayout({
   children,
 }: {
