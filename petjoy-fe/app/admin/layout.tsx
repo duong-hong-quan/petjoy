@@ -107,14 +107,14 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
             sx={{
               display: "block",
               borderRadius: "20px",
-              ".css-oz5owb-MuiButtonBase-root-MuiListItemButton-root.Mui-selected":
-                {
-                  borderRadius: "20px",
-                },
-              ".css-oz5owb-MuiButtonBase-root-MuiListItemButton-root:hover": {
+              "& .MuiListItemButton-root.Mui-selected": {
+                borderRadius: "20px",
+              },
+              "& .MuiListItemButton-root:hover": {
                 borderRadius: "20px",
               },
               margin: "5px 0",
+              padding: "0 10px",
             }}
           >
             <ListItemButton
