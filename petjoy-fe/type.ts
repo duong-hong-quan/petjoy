@@ -18,6 +18,7 @@ export interface User {
   name: string;
 
   profilePicture: string;
+  isAdmin: boolean;
 }
 
 export interface Pet {

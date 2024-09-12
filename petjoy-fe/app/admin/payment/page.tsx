@@ -141,7 +141,10 @@ export default function ManagementPayment() {
                 <TableCell align="center">
                   {payment.paymentPackage.name}
                 </TableCell>
-                <TableCell align="center">{payment.amount}</TableCell>
+                <TableCell align="center">
+                  {" "}
+                  {parseInt(payment.amount.toString()).toLocaleString()} ₫
+                </TableCell>
                 <TableCell align="center">
                   {new Date(payment.paymentDate).toLocaleDateString()}
                 </TableCell>

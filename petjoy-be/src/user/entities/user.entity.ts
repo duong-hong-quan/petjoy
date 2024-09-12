@@ -18,6 +18,8 @@ export class User {
 
   @Column({ default: "" })
   profilePicture: string;
+  @Column({ default: false })
+  isAdmin: boolean;
 
   @OneToMany(() => Pet, (pet) => pet.owner)
   pets: Pet[];

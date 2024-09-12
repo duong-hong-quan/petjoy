@@ -89,7 +89,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
             flex: 1,
           }}
         >
-          PETJOY
+          <Link href={"/"}> PETJOY</Link>
         </Typography>
         {isMobile && (
           <IconButton onClick={handleDrawerToggle}>

@@ -47,13 +47,21 @@ function Navbar() {
           <ListItemText primary="Trang chủ" />
         </ListItem>
         <ListItem component={Link} href="/user/match">
-          <ListItemText primary="Match" />
+          <ListItemText primary="Quẹt" />
         </ListItem>
         {user ? (
           <>
+            <ListItem component={Link} href="/user/package">
+              <ListItemText primary="Gói" />
+            </ListItem>
             <ListItem component={Link} href="/user/profile">
               <ListItemText primary="Hồ sơ" />
             </ListItem>
+            {user.isAdmin && (
+              <ListItem component={Link} href="/admin/dashboard">
+                <ListItemText primary="Quản lý" />
+              </ListItem>
+            )}
             <ListItem onClick={() => dispatch(logout())}>
               <ListItemText primary="Đăng xuất" />
             </ListItem>
@@ -148,7 +156,19 @@ function Navbar() {
                 marginRight: 20,
               }}
             >
-              Match
+              Quẹt
+            </Link>
+            <Link
+              href={"/user/package"}
+              style={{
+                color: "white",
+                textDecoration: "none",
+                fontSize: "1rem",
+                fontWeight: "bold",
+                marginRight: 20,
+              }}
+            >
+              Gói
             </Link>
             <Link
               href={"/user/profile"}
@@ -162,6 +182,11 @@ function Navbar() {
             >
               Hồ sơ
             </Link>
+            {user.isAdmin && (
+              <ListItem component={Link} href="/admin/dashboard">
+                <ListItemText primary="Quản lý" />
+              </ListItem>
+            )}
             <Button
               sx={{
                 bgcolor: "white",

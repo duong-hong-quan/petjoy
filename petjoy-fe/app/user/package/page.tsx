@@ -1,0 +1,190 @@
+"use client";
+import React, { useEffect, useState } from "react";
+import { PaymentPackage } from "../../../type";
+import Container from "@mui/material/Container";
+import useCallApi from "../../../api/callApi";
+import api from "../../../api/config";
+import PackageCard from "../../components/PackageCard";
+import {
+  Box,
+  Modal,
+  Typography,
+  Button,
+  Chip,
+  Divider,
+  CardMedia,
+} from "@mui/material";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/redux/store";
+import { toast } from "react-toastify";
+import { CheckCircle, Close } from "@mui/icons-material";
+import QR from "../../../assets/img/QR.png";
+const Package = () => {
+  const [packages, setPackages] = useState<PaymentPackage[]>([]);
+  const { callApi } = useCallApi(api);
+  const [selectedPackage, setSelectedPackage] = useState<PaymentPackage | null>(
+    null
+  );
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const user = useSelector((state: RootState) => state.auth.user);
+  const fetchData = async () => {
+    const response = await callApi("payment-package", "GET");
+    if (response.isSuccess) {
+      setPackages(response.data);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const onSelect = (data: PaymentPackage) => {
+    setSelectedPackage(data);
+    setIsModalOpen(true);
+  };
+
+  const handleClose = () => {
+    setIsModalOpen(false);
+    setSelectedPackage(null);
+  };
+
+  const handleConfirm = async () => {
+    if (selectedPackage) {
+      const response = await callApi(`payment`, "POST", {
+        userId: user?.id,
+        paymentPackageId: selectedPackage.id,
+      });
+      if (response.isSuccess) {
+        fetchData();
+        handleClose();
+        toast.success(
+          "Mua gói thành công. Bạn hãy chờ chúng tôi 1 lát để xác thực "
+        );
+      } else {
+        toast.error("Mua gói thất bại");
+      }
+    }
+  };
+
+  return (
+    <Container maxWidth="md">
+      <Box
+        sx={{
+          marginTop: "20px",
+        }}
+      >
+        <Typography
+          variant="h6"
+          sx={{
+            textAlign: "center",
+            margin: "20px 0",
+            fontWeight: "bold",
+            color: "#1976d2",
+          }}
+        >
+          {"Mua gói quẹt để gia tăng cơ hội gặp gỡ".toUpperCase()}
+        </Typography>
+        <PackageCard packages={packages} onSelect={onSelect} />
+      </Box>
+      {selectedPackage && (
+        <Modal open={isModalOpen} onClose={handleClose}>
+          <Box
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: 400,
+              bgcolor: "background.paper",
+              boxShadow: 24,
+              borderRadius: 2,
+              p: 0,
+              overflow: "hidden",
+            }}
+          >
+            <Box
+              sx={{
+                bgcolor: "primary.main",
+                color: "primary.contrastText",
+                p: 3,
+                position: "relative",
+              }}
+            >
+              <Typography variant="h5" component="h2" fontWeight="bold">
+                {selectedPackage.name}
+              </Typography>
+              <Chip
+                label="Gói đặc biệt"
+                size="small"
+                sx={{
+                  bgcolor: "primary.light",
+                  color: "primary.contrastText",
+                  mt: 1,
+                }}
+              />
+              <Close
+                sx={{
+                  position: "absolute",
+                  top: 8,
+                  right: 8,
+                  cursor: "pointer",
+                }}
+                onClick={handleClose}
+              />
+            </Box>
+            <Box sx={{ p: 3 }}>
+              <Typography variant="body1" sx={{ mb: 2 }}>
+                {selectedPackage.description}
+              </Typography>
+              <Divider sx={{ my: 2 }} />
+              <Typography variant="h6" fontWeight="bold" sx={{ mb: 1 }}>
+                Giá:
+                {parseInt(selectedPackage.price.toString()).toLocaleString()} ₫
+              </Typography>
+              <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+                <CheckCircle color="success" sx={{ mr: 1 }} />
+                <Typography variant="body2">Sử dụng trong 30 ngày</Typography>
+              </Box>
+              <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+                <CheckCircle color="success" sx={{ mr: 1 }} />
+                <Typography variant="body2">Hỗ trợ 24/7</Typography>
+              </Box>
+              <Box sx={{ mb: 2 }}>
+                <Typography variant="body1">
+                  Vui lòng chuyển khoản theo QR bên dưới
+                </Typography>
+                <CardMedia
+                  component="img"
+                  image={QR.src}
+                  alt="QR Code"
+                  sx={{
+                    width: "100%",
+                    height: "auto",
+                    maxWidth: "200px",
+                    margin: "auto",
+                  }}
+                />
+              </Box>
+              <Button
+                variant="contained"
+                fullWidth
+                onClick={handleConfirm}
+                sx={{
+                  mt: 2,
+                  bgcolor: "secondary.main",
+                  "&:hover": {
+                    bgcolor: "secondary.dark",
+                  },
+                }}
+              >
+                Mua ngay
+              </Button>
+            </Box>
+          </Box>
+        </Modal>
+      )}
+    </Container>
+  );
+};
+
+export default Package;
