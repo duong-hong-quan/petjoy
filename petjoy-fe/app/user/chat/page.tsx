@@ -89,27 +89,14 @@ const PetProfileChat = () => {
 
   const handleSendMessage = async () => {
     if (!newMessage.trim() || !userId) return;
-    if (messages && messages.length > 0) {
-      await createEntity(`chat`, [
-        ...messages,
-        {
-          text: newMessage.trim(),
-          userId,
-          timestamp: Date.now(),
-          room: selectedRoom?.id,
-        },
-      ] as Message[]);
-    } else {
-      await createEntity(`chat`, [
-        {
-          text: newMessage.trim(),
-          userId,
-          timestamp: Date.now(),
-          room: selectedRoom?.id,
-        },
-      ] as Message[]);
-    }
-
+    let messages = (await getEntity("chat")) as Message[];
+    messages.push({
+      text: newMessage.trim(),
+      userId,
+      timestamp: Date.now(),
+      room: selectedRoom?.id,
+    } as Message);
+    await createEntity("chat", messages);
     setNewMessage("");
   };
 
