@@ -178,14 +178,25 @@ function Navbar() {
                 fontSize: "1rem",
                 fontWeight: "bold",
                 marginRight: 20,
+                textWrap: "nowrap",
               }}
             >
               Hồ sơ
             </Link>
             {user.isAdmin && (
-              <ListItem component={Link} href="/admin/dashboard">
-                <ListItemText primary="Quản lý" />
-              </ListItem>
+              <Link
+                href={"/admin/dashboard"}
+                style={{
+                  color: "white",
+                  textDecoration: "none",
+                  fontSize: "1rem",
+                  fontWeight: "bold",
+                  marginRight: 20,
+                  textWrap: "nowrap",
+                }}
+              >
+                Quản lý
+              </Link>
             )}
             <Button
               sx={{
@@ -197,6 +208,7 @@ function Navbar() {
                 ":hover": {
                   cursor: "pointer",
                 },
+                textWrap: "nowrap",
               }}
               variant="outlined"
               onClick={() => {
