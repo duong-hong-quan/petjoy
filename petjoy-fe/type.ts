@@ -90,6 +90,7 @@ export interface Payment {
   amount: number;
 
   paymentDate: Date;
+  status: boolean;
 }
 export interface PaymentPackage {
   id: number;

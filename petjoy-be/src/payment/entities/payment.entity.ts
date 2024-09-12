@@ -21,6 +21,9 @@ export class Payment {
   @Column("decimal")
   amount: number;
 
+  @Column({ default: false })
+  status: boolean;
+
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   paymentDate: Date;
 }

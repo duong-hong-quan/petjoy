@@ -18,6 +18,7 @@ import {
   useMediaQuery,
   Theme,
   Avatar,
+  Container,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
@@ -25,6 +26,7 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import PeopleIcon from "@mui/icons-material/People";
 import Link from "next/link";
+import PaymentsOutlinedIcon from "@mui/icons-material/PaymentsOutlined";
 import { usePathname } from "next/navigation";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
@@ -38,6 +40,11 @@ const menuItems = [
     label: "Bảng điều khiển",
     icon: <DashboardIcon />,
     link: "/admin/dashboard",
+  },
+  {
+    label: "Các thanh toán",
+    icon: <PaymentsOutlinedIcon />,
+    link: "/admin/payment",
   },
   {
     label: "Gói đăng kí",
@@ -64,12 +71,13 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
 
   const drawer = (
     <>
-      <Toolbar
+      <Box
         sx={{
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
           px: [1],
+          marginTop: "30px",
         }}
       >
         <Typography
@@ -88,10 +96,14 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
             <ChevronLeftIcon />
           </IconButton>
         )}
-      </Toolbar>
+      </Box>
       <List>
         {menuItems.map((item) => (
-          <ListItem key={item.label} disablePadding sx={{ display: "block" }}>
+          <ListItem
+            key={item.label}
+            disablePadding
+            sx={{ display: "block", borderRadius: "20px" }}
+          >
             <ListItemButton
               component={Link}
               href={item.link}
@@ -125,8 +137,8 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ display: "flex" }}>
-        <CssBaseline />
-        <AppBar
+        {/* <CssBaseline /> */}
+        <Box
           position="fixed"
           sx={{
             borderRadius: "300px",
@@ -135,28 +147,34 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
             backgroundColor: "white",
           }}
         >
-          <Toolbar
-            sx={{
-              boxShadow: "none",
-              display: "flex",
-              justifyContent: "space-between",
-            }}
-          >
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              onClick={handleDrawerToggle}
-              edge="start"
-              sx={{ mr: 2, color: "#007EFF" }}
+          {isMobile && (
+            <Box
+              sx={{
+                boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
+                display: "flex",
+                justifyContent: "space-between",
+                width: "100%",
+                backgroundColor: "white",
+                marginBottom: "10px",
+                position: "fixed",
+              }}
             >
-              <MenuIcon />
-            </IconButton>
-            <Typography variant="h6" noWrap sx={{ color: "#007EFF" }}>
-              Hello Admin
-            </Typography>
-            <Avatar />
-          </Toolbar>
-        </AppBar>
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                onClick={handleDrawerToggle}
+                edge="start"
+                sx={{ mr: 2, color: "#007EFF" }}
+              >
+                <MenuIcon />
+              </IconButton>
+              <Typography variant="h6" noWrap sx={{ color: "#007EFF" }}>
+                Hello Admin
+              </Typography>
+              <Avatar />
+            </Box>
+          )}
+        </Box>
         <Box
           component="nav"
           sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
@@ -175,7 +193,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
                   boxSizing: "border-box",
                   width: drawerWidth,
                   borderRight: "0",
-                  boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
+                  // boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
                 },
               }}
             >
@@ -199,18 +217,33 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
             </Drawer>
           )}
         </Box>
-        <Box
-          component="main"
+        <Container
           sx={{
             flexGrow: 1,
             p: 3,
-            width: { sm: `calc(100% - ${drawerWidth}px)` },
-            minHeight: "100dvh",
           }}
         >
-          <Toolbar />
-          {children}
-        </Box>
+          {/* <Toolbar /> */}
+          {!isMobile && (
+            <Box
+              sx={{
+                boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
+                display: "flex",
+                justifyContent: "space-between",
+                width: "100%",
+                borderRadius: "20px",
+                zIndex: 9999,
+                padding: 2,
+              }}
+            >
+              <Typography variant="h6" noWrap sx={{ color: "#007EFF" }}>
+                Hello Admin
+              </Typography>
+              <Avatar />
+            </Box>
+          )}
+          <Box sx={{ marginTop: "35px" }}>{children}</Box>
+        </Container>
       </Box>
     </ThemeProvider>
   );

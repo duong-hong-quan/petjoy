@@ -53,12 +53,9 @@ const PackageCards = ({ packages, onSelect }: PackageCardsProps) => {
               >
                 {parseInt(pkg.price.toString()).toLocaleString()} ₫
               </Typography>
+              <Typography variant="body1">{pkg.description}</Typography>
             </Box>
-            <Box sx={{ p: 3, flexGrow: 1 }}>
-              <Typography variant="body1" color="text.secondary">
-                {pkg.description}
-              </Typography>
-            </Box>
+
             <Button
               variant="contained"
               fullWidth

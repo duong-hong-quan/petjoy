@@ -112,33 +112,7 @@ const ManagementPaymentPackage = () => {
               gap: 2,
             }}
           >
-            <TextField
-              variant="filled"
-              label="Tìm kiếm gói"
-              sx={{
-                "& .MuiFilledInput-root": {
-                  backgroundColor: "white",
-                  "&:hover": {
-                    backgroundColor: "white",
-                  },
-                  "&.Mui-focused": {
-                    backgroundColor: "white",
-                  },
-                },
-                "& .MuiInputLabel-root": {
-                  color: "black",
-                  "&.Mui-focused": {
-                    color: "black",
-                  },
-                },
-                "& .MuiFilledInput-underline:before": {
-                  borderBottomColor: "black",
-                },
-                "& .MuiFilledInput-underline:after": {
-                  borderBottomColor: "black",
-                },
-              }}
-            />
+            <TextField variant="filled" label="Tìm kiếm gói" />
           </Box>
           <PackageCards packages={packages} onSelect={handleOpen} />
           <Dialog open={open} onClose={handleClose}>
