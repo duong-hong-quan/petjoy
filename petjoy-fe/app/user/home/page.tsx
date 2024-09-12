@@ -142,14 +142,12 @@ export default function HomePage() {
               </div>
             </Grid>
             <Grid item xs={12} md={6}>
-              <Card>
-                <CardMedia
-                  component="img"
-                  height="100"
-                  image={dogcat.src}
-                  alt="Dog and cat"
-                />
-              </Card>
+              <CardMedia
+                component="img"
+                height="100"
+                image={dogcat.src}
+                alt="Dog and cat"
+              />
             </Grid>
           </Grid>
         </Box>
