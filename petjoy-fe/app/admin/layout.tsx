@@ -239,7 +239,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
               }}
             >
               <Typography variant="h6" noWrap sx={{ color: "#007EFF" }}>
-                Hello Admin
+                Hello {user?.name}
               </Typography>
               <Avatar src={user?.profilePicture} />
             </Box>
