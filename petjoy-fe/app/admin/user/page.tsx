@@ -82,31 +82,65 @@ function ManagementUser() {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </Box>
-          <TableContainer component={Paper} sx={{ overflowX: "auto" }}>
+          <TableContainer
+            component={Paper}
+            sx={{
+              overflowX: "auto",
+              borderRadius: "16px", // Apply border radius to the container
+            }}
+          >
             <Table>
-              <TableHead>
+              <TableHead
+                sx={{
+                  backgroundColor: "#007EFF",
+                  "& th:first-of-type": {
+                    borderTopLeftRadius: "16px", // Apply border radius to the first cell
+                    borderBottomLeftRadius: "16px",
+                  },
+                  "& th:last-of-type": {
+                    borderTopRightRadius: "16px", // Apply border radius to the last cell
+                    borderBottomRightRadius: "16px",
+                  },
+                }}
+              >
                 <TableRow>
                   <TableCell
                     align="center"
-                    sx={{ fontWeight: "bold", fontSize: "1.1rem" }}
+                    sx={{
+                      fontWeight: "bold",
+                      fontSize: "1.1rem",
+                      color: "white",
+                    }}
                   >
                     Avatar
                   </TableCell>
                   <TableCell
                     align="center"
-                    sx={{ fontWeight: "bold", fontSize: "1.1rem" }}
+                    sx={{
+                      fontWeight: "bold",
+                      fontSize: "1.1rem",
+                      color: "white",
+                    }}
                   >
                     Tên
                   </TableCell>
                   <TableCell
                     align="center"
-                    sx={{ fontWeight: "bold", fontSize: "1.1rem" }}
+                    sx={{
+                      fontWeight: "bold",
+                      fontSize: "1.1rem",
+                      color: "white",
+                    }}
                   >
                     Email
                   </TableCell>
                   <TableCell
                     align="center"
-                    sx={{ fontWeight: "bold", fontSize: "1.1rem" }}
+                    sx={{
+                      fontWeight: "bold",
+                      fontSize: "1.1rem",
+                      color: "white",
+                    }}
                   >
                     Hành động
                   </TableCell>

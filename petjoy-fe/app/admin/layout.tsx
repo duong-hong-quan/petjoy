@@ -104,7 +104,18 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
           <ListItem
             key={item.label}
             disablePadding
-            sx={{ display: "block", borderRadius: "20px" }}
+            sx={{
+              display: "block",
+              borderRadius: "20px",
+              ".css-oz5owb-MuiButtonBase-root-MuiListItemButton-root.Mui-selected":
+                {
+                  borderRadius: "20px",
+                },
+              ".css-oz5owb-MuiButtonBase-root-MuiListItemButton-root:hover": {
+                borderRadius: "20px",
+              },
+              margin: "5px 0",
+            }}
           >
             <ListItemButton
               component={Link}

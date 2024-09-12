@@ -66,49 +66,67 @@ export default function ManagementPayment() {
         </Box>
       )}
 
-      <TableContainer component={Paper} sx={{ overflowX: "auto" }}>
+      <TableContainer
+        component={Paper}
+        sx={{
+          overflowX: "auto",
+          borderRadius: "16px", // Apply border radius to the container
+        }}
+      >
         <Table>
-          <TableHead>
+          <TableHead
+            sx={{
+              backgroundColor: "#007EFF",
+              "& th:first-of-type": {
+                borderTopLeftRadius: "16px", // Apply border radius to the first cell
+                borderBottomLeftRadius: "16px",
+              },
+              "& th:last-of-type": {
+                borderTopRightRadius: "16px", // Apply border radius to the last cell
+                borderBottomRightRadius: "16px",
+              },
+            }}
+          >
             <TableRow>
               <TableCell
                 align="center"
-                sx={{ fontWeight: "bold", fontSize: "1.1rem" }}
+                sx={{ fontWeight: "bold", fontSize: "1.1rem", color: "white" }}
               >
                 ID
               </TableCell>
               <TableCell
                 align="center"
-                sx={{ fontWeight: "bold", fontSize: "1.1rem" }}
+                sx={{ fontWeight: "bold", fontSize: "1.1rem", color: "white" }}
               >
                 Người dùng
               </TableCell>
               <TableCell
                 align="center"
-                sx={{ fontWeight: "bold", fontSize: "1.1rem" }}
+                sx={{ fontWeight: "bold", fontSize: "1.1rem", color: "white" }}
               >
                 Gói
               </TableCell>
               <TableCell
                 align="center"
-                sx={{ fontWeight: "bold", fontSize: "1.1rem" }}
+                sx={{ fontWeight: "bold", fontSize: "1.1rem", color: "white" }}
               >
                 Giá tiền
               </TableCell>
               <TableCell
                 align="center"
-                sx={{ fontWeight: "bold", fontSize: "1.1rem" }}
+                sx={{ fontWeight: "bold", fontSize: "1.1rem", color: "white" }}
               >
                 Ngày
               </TableCell>
               <TableCell
                 align="center"
-                sx={{ fontWeight: "bold", fontSize: "1.1rem" }}
+                sx={{ fontWeight: "bold", fontSize: "1.1rem", color: "white" }}
               >
                 Trạng thái
               </TableCell>
               <TableCell
                 align="center"
-                sx={{ fontWeight: "bold", fontSize: "1.1rem" }}
+                sx={{ fontWeight: "bold", fontSize: "1.1rem", color: "white" }}
               >
                 Hành động
               </TableCell>
@@ -142,7 +160,6 @@ export default function ManagementPayment() {
                   {payment.paymentPackage.name}
                 </TableCell>
                 <TableCell align="center">
-                  {" "}
                   {parseInt(payment.amount.toString()).toLocaleString()} ₫
                 </TableCell>
                 <TableCell align="center">
