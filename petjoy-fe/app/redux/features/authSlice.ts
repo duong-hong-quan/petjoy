@@ -26,6 +26,9 @@ export const authSlice = createSlice({
       state.user = null;
       state.pet = null;
       localStorage.removeItem("token");
+      document.cookie = `isAdmin=false; path=/; max-age=${
+        7 * 24 * 60 * 60
+      }; secure; samesite=strict`;
       toast.success("Đăng xuất thành công");
     },
     setPet: (state, action: PayloadAction<Pet>) => {
