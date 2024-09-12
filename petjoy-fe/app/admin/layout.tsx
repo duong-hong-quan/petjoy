@@ -62,7 +62,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-
+  const user = useSelector((state: RootState) => state.auth.user);
   const handleDrawerToggle = () => {
     setOpen(!open);
   };
@@ -171,7 +171,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
                 <MenuIcon />
               </IconButton>
               <Typography variant="h6" noWrap sx={{ color: "#007EFF" }}>
-                Hello Admin
+                Hello {user?.name}
               </Typography>
               <Avatar />
             </Box>
@@ -241,7 +241,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
               <Typography variant="h6" noWrap sx={{ color: "#007EFF" }}>
                 Hello Admin
               </Typography>
-              <Avatar />
+              <Avatar src={user?.profilePicture} />
             </Box>
           )}
           <Box sx={{ marginTop: "35px" }}>{children}</Box>
