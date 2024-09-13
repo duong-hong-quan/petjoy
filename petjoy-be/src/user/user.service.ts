@@ -12,7 +12,7 @@ import { User } from "./entities/user.entity";
 import { LoginRequestDto } from "./dto/login-request.dto";
 import { AppActionResultDto } from "../common/dto/app-action-result.dto";
 import { InjectRepository } from "@nestjs/typeorm";
-import { buildError } from "../common/utility";
+import { buildError, EmailService } from "../common/utility";
 import { firebaseAdmin } from "../config/firebase-admin";
 import axios from "axios";
 import { config as envConfig } from "dotenv";
@@ -46,7 +46,9 @@ export class UserService {
   }
 
   async findOne(id: number): Promise<AppActionResultDto> {
-    const data = await this.repository.findOne({ where: { id } });
+    const data = await this.repository.findOne({
+      where: { id, isBanned: false },
+    });
     return {
       data,
       message: ["Data retrieved successfully"],
@@ -76,6 +78,7 @@ export class UserService {
       where: {
         email: request.username,
         password: request.password,
+        isBanned: false,
       },
     });
     return {
@@ -86,7 +89,9 @@ export class UserService {
   }
 
   async getUserByEmail(email: string): Promise<AppActionResultDto> {
-    const data = await this.repository.findOne({ where: { email } });
+    const data = await this.repository.findOne({
+      where: { email, isBanned: false },
+    });
     if (!data) {
       return buildError("User not found");
     }
@@ -112,6 +117,8 @@ export class UserService {
       newUser.profilePicture = picture;
 
       const createdUser = await this.create(newUser);
+      const emailService = new EmailService();
+      await emailService.sendPasswordNotification(email, name);
       return {
         data: createdUser.data,
         message: ["User created successfully"],

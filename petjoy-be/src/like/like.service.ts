@@ -8,6 +8,7 @@ import { User } from "../user/entities/user.entity";
 import { Pet } from "../pet/entities/pet.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { buildError } from "../common/utility";
+import { Payment } from "../payment/entities/payment.entity";
 
 @Injectable()
 export class LikeService {
@@ -17,23 +18,28 @@ export class LikeService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     @InjectRepository(Pet)
-    private readonly petRepository: Repository<Pet>
+    private readonly petRepository: Repository<Pet>,
+    @InjectRepository(Payment)
+    private readonly paymentRepository: Repository<Payment>
   ) {}
   async create(createLikeDto: CreateLikeDto): Promise<AppActionResultDto> {
     try {
-      const orignPet = await this.repository.find({
+      const orignPet = await this.petRepository.findOne({
         where: {
           id: createLikeDto.originPetId,
         },
+        relations: ["owner"],
       });
-      const likePetDb = await this.repository.find({
+      const likePetDb = await this.petRepository.findOne({
         where: {
           id: createLikeDto.likePetId,
         },
       });
+
       if (!orignPet || !likePetDb) {
         return buildError("Not found");
       }
+
       const likeDb = await this.repository.findOne({
         where: {
           originPetId: createLikeDto.originPetId,
@@ -43,30 +49,63 @@ export class LikeService {
       if (likeDb) {
         return buildError("You already like this pet");
       }
-      const like = await this.repository.create(createLikeDto);
-      await this.repository.save(like);
-      const data = await this.repository.findOne({
+      const today = new Date();
+      const todayPlus7 = new Date(today.setDate(today.getDate() - 7));
+
+      todayPlus7.setHours(0, 0, 0, 0);
+
+      const paymentDb = await this.paymentRepository.findOne({
         where: {
-          originPetId: createLikeDto.likePetId,
-          likePetId: createLikeDto.originPetId,
+          userId: orignPet.ownerId,
+          paymentDate: todayPlus7,
         },
       });
-      const fullLike = await this.repository.findOne({
-        where: { id: like.id },
-        relations: ["originPet", "likePet"], // Adjust the relations as per your entity
+      const todayMinus1Months = new Date(today.setMonth(today.getMonth() - 1));
+      todayMinus1Months.setHours(0, 0, 0, 0);
+      const paymentDbMonth = await this.paymentRepository.findOne({
+        where: {
+          userId: orignPet.ownerId,
+          paymentDate: todayMinus1Months,
+        },
       });
-      if (data) {
+
+      if (paymentDb || paymentDbMonth) {
+        const like = await this.repository.create(createLikeDto);
+        await this.repository.save(like);
+        const data = await this.repository.findOne({
+          where: {
+            originPetId: createLikeDto.likePetId,
+            likePetId: createLikeDto.originPetId,
+          },
+        });
+        const fullLike = await this.repository.findOne({
+          where: { id: like.id },
+          relations: ["originPet", "likePet"],
+        });
+        if (data) {
+          return {
+            data: fullLike,
+            message: ["Matchingggg"],
+            isSuccess: true,
+          };
+        }
         return {
           data: fullLike,
-          message: ["Matchingggg"],
+          message: ["Like created successfully"],
           isSuccess: true,
         };
+      } else {
+        const likeCount = await this.repository.count({
+          where: {
+            originPetId: createLikeDto.originPetId,
+            date: new Date(),
+          },
+        });
+
+        if (likeCount > 5) {
+          return buildError("Like limited");
+        }
       }
-      return {
-        data: fullLike,
-        message: ["Like created successfully"],
-        isSuccess: true,
-      };
     } catch (error) {
       return buildError(error.message);
     }

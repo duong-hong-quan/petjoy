@@ -20,7 +20,8 @@ export class User {
   profilePicture: string;
   @Column({ default: false })
   isAdmin: boolean;
-
+  @Column({ default: false })
+  isBanned: boolean;
   @OneToMany(() => Pet, (pet) => pet.owner)
   pets: Pet[];
 

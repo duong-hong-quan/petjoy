@@ -17,4 +17,6 @@ export class Like {
 
   @ManyToOne(() => Pet, (pet) => pet.beLikes)
   likePet: Pet;
+  @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
+  date: Date;
 }
