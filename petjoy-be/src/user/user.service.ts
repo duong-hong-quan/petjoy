@@ -16,7 +16,7 @@ import { buildError } from "../common/utility";
 import { firebaseAdmin } from "../config/firebase-admin";
 import axios from "axios";
 import { config as envConfig } from "dotenv";
-import { EmailService } from "@/common/email-service";
+import { EmailService } from "../common/email-service";
 
 envConfig();
 
