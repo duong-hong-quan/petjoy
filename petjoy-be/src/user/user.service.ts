@@ -12,10 +12,11 @@ import { User } from "./entities/user.entity";
 import { LoginRequestDto } from "./dto/login-request.dto";
 import { AppActionResultDto } from "../common/dto/app-action-result.dto";
 import { InjectRepository } from "@nestjs/typeorm";
-import { buildError, EmailService } from "../common/utility";
+import { buildError } from "../common/utility";
 import { firebaseAdmin } from "../config/firebase-admin";
 import axios from "axios";
 import { config as envConfig } from "dotenv";
+import { EmailService } from "@/common/email-service";
 
 envConfig();
 
