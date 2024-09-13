@@ -79,7 +79,7 @@ const Dashboard = () => {
             label="Từ ngày"
             type="date"
             fullWidth
-            value={to}
+            value={from}
             InputLabelProps={{
               shrink: true,
             }}
@@ -91,7 +91,7 @@ const Dashboard = () => {
             label="Đến ngày"
             type="date"
             fullWidth
-            value={from}
+            value={to}
             InputLabelProps={{
               shrink: true,
             }}
