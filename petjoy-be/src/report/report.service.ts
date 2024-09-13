@@ -57,7 +57,9 @@ export class ReportService {
     // Process payments to get the monthly counts
     const monthlyCounts = payments.reduce(
       (acc, payment) => {
-        const month = payment.paymentDate.toISOString().slice(0, 7); // Extract YYYY-MM
+        const month = new Date(payment.paymentDate)
+          .toLocaleDateString("en-GB", { month: "2-digit", year: "numeric" })
+          .replace("/", "/"); // Format to mm/yyyy
         if (!acc[month]) {
           acc[month] = 0;
         }
@@ -83,6 +85,7 @@ export class ReportService {
     if (from && to) {
       queryOptions.where = {
         paymentDate: Between(from, to),
+        status: true,
       };
     }
 
