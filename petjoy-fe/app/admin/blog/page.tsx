@@ -173,33 +173,100 @@ const AdminBlogsPage: React.FC = () => {
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        mb={2}
-      >
-        <Typography variant="h4" gutterBottom>
+      <Box display="flex" justifyContent="center" alignItems="center" mb={2}>
+        <Typography
+          sx={{
+            textAlign: "center",
+            color: "#007EFF",
+            fontWeight: "bold",
+            marginBottom: 4,
+            textTransform: "uppercase",
+            letterSpacing: 1,
+          }}
+          variant="h4"
+          gutterBottom
+        >
           Quản lý Blog
         </Typography>
+      </Box>
+      <Box display="flex" justifyContent="end" alignItems="center" mb={2}>
         <Button
           variant="contained"
-          color="primary"
+          sx={{ backgroundColor: "#007EFF", color: "white" }}
           startIcon={<AddIcon />}
           onClick={() => handleOpenDialog("add")}
         >
           Thêm Blog Mới
         </Button>
       </Box>
-      <TableContainer component={Paper}>
+
+      <TableContainer
+        component={Paper}
+        sx={{
+          overflowX: "auto",
+          borderRadius: "16px", // Apply border radius to the container
+        }}
+      >
         <Table>
-          <TableHead>
+          <TableHead
+            sx={{
+              backgroundColor: "#007EFF",
+              "& th:first-of-type": {
+                borderTopLeftRadius: "16px", // Apply border radius to the first cell
+                borderBottomLeftRadius: "16px",
+              },
+              "& th:last-of-type": {
+                borderTopRightRadius: "16px", // Apply border radius to the last cell
+                borderBottomRightRadius: "16px",
+              },
+            }}
+          >
             <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>Tên Blog</TableCell>
-              <TableCell>ID Người Dùng</TableCell>
-              <TableCell>Phân Loại</TableCell>
-              <TableCell>Hành Động</TableCell>
+              <TableCell
+                sx={{
+                  fontWeight: "bold",
+                  fontSize: "1.1rem",
+                  color: "white",
+                }}
+              >
+                ID
+              </TableCell>
+              <TableCell
+                sx={{
+                  fontWeight: "bold",
+                  fontSize: "1.1rem",
+                  color: "white",
+                }}
+              >
+                Tên Blog
+              </TableCell>
+              <TableCell
+                sx={{
+                  fontWeight: "bold",
+                  fontSize: "1.1rem",
+                  color: "white",
+                }}
+              >
+                ID Người Dùng
+              </TableCell>
+              <TableCell
+                sx={{
+                  fontWeight: "bold",
+                  fontSize: "1.1rem",
+                  color: "white",
+                }}
+              >
+                Phân Loại
+              </TableCell>
+              <TableCell
+                sx={{
+                  fontWeight: "bold",
+                  fontSize: "1.1rem",
+                  color: "white",
+                }}
+              >
+                Hành Động
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
