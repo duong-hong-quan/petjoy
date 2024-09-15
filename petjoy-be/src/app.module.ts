@@ -12,6 +12,8 @@ import { PetTypeModule } from "./pet-type/pet-type.module";
 import { FirebaseAuthGuard } from "./config/firebase-auth-guard";
 import { JwtService } from "@nestjs/jwt";
 import { ReportModule } from './report/report.module';
+import { BlogModule } from './blog/blog.module';
+import { CategoryModule } from './category/category.module';
 envConfig();
 
 @Module({
@@ -32,6 +34,8 @@ envConfig();
     PaymentModule,
     PetTypeModule,
     ReportModule,
+    BlogModule,
+    CategoryModule,
   ],
   controllers: [AppController],
   providers: [AppService, FirebaseAuthGuard, JwtService],

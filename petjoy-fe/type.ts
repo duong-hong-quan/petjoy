@@ -130,3 +130,26 @@ export interface Message {
   timestamp: number;
   room: number;
 }
+export interface Category {
+  id: number;
+
+  name: string;
+
+  blogs: Blog[];
+}
+
+export interface Blog {
+  id: number;
+
+  blogName: string;
+
+  blogImg: string;
+
+  content: string;
+
+  userId: number;
+
+  categoryId: number;
+  user: User;
+  category: Category;
+}

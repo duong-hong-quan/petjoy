@@ -46,11 +46,14 @@ function Navbar() {
         <ListItem component={Link} href="/">
           <ListItemText primary="Trang chủ" />
         </ListItem>
-        <ListItem component={Link} href="/user/match">
-          <ListItemText primary="Quẹt" />
+        <ListItem component={Link} href="/user/blog">
+          <ListItemText primary="Blog" />
         </ListItem>
         {user ? (
           <>
+            <ListItem component={Link} href="/user/match">
+              <ListItemText primary="Quẹt" />
+            </ListItem>
             <ListItem component={Link} href="/user/package">
               <ListItemText primary="Gói" />
             </ListItem>
@@ -136,10 +139,22 @@ function Navbar() {
               fontSize: "1rem",
               fontWeight: "bold",
               display: "inline-block",
-              margin: " 0 12px",
             }}
           >
             Trang chủ
+          </Link>
+          <Link
+            href={"/user/blog"}
+            style={{
+              color: "white",
+              textDecoration: "none",
+              fontSize: "1rem",
+              fontWeight: "bold",
+              display: "inline-block",
+              marginRight: "10px",
+            }}
+          >
+            Blog
           </Link>
         </Box>
         {user ? (

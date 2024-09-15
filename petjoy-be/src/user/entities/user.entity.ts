@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
 import { Pet } from "../../pet/entities/pet.entity";
 import { Payment } from "../../payment/entities/payment.entity";
+import { Blog } from "../../blog/entities/blog.entity";
 
 @Entity()
 export class User {
@@ -27,4 +28,6 @@ export class User {
 
   @OneToMany(() => Payment, (payment) => payment.user)
   payments: Payment[];
+  @OneToMany(() => Blog, (blog) => blog.user)
+  blogs: Blog[];
 }

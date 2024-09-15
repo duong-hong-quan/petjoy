@@ -172,7 +172,7 @@ const Dashboard = () => {
                     <YAxis />
                     <Tooltip />
                     <Legend />
-                    <Bar dataKey="count" fill="#8884d8" />
+                    <Bar dataKey="Số lượng" fill="#8884d8" />
                   </BarChart>
                 </ResponsiveContainer>
               </Box>
