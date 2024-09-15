@@ -27,3 +27,28 @@ export function getCookie(name: string): string | null {
 
   return null;
 }
+export const calculateAge = (dob: string): string => {
+  const birthDate = new Date(dob);
+  const today = new Date();
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const monthDifference = today.getMonth() - birthDate.getMonth();
+  const dayDifference = today.getDate() - birthDate.getDate();
+
+  if (monthDifference < 0 || (monthDifference === 0 && dayDifference < 0)) {
+    age--;
+  }
+
+  if (age < 1) {
+    const months =
+      (today.getFullYear() - birthDate.getFullYear()) * 12 + monthDifference;
+    if (months < 1) {
+      const days = Math.floor(
+        (today.getTime() - birthDate.getTime()) / (1000 * 60 * 60 * 24)
+      );
+      return `${days} ngày tuổi`;
+    }
+    return `${months} tháng tuổi`;
+  }
+
+  return `${age} tuổi`;
+};

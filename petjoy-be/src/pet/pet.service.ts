@@ -37,6 +37,7 @@ export class PetService {
       where: {
         ownerId: userId,
       },
+      relations: ["owner", "petType", "filterPetType", "isHiringPetType"],
     });
     return {
       data,

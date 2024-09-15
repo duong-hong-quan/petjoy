@@ -34,6 +34,7 @@ import { useRouter } from "next/navigation";
 import { Room } from "../../../type";
 import { setPet } from "../../redux/features/authSlice";
 import Link from "next/link";
+import { calculateAge } from "@/utils/utility";
 const MatchPage = () => {
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [swipePosition, setSwipePosition] = useState(0);
@@ -177,31 +178,6 @@ const MatchPage = () => {
       setSelectedPet(pet.id);
     }
   }, []);
-  const calculateAge = (dob: string): string => {
-    const birthDate = new Date(dob);
-    const today = new Date();
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const monthDifference = today.getMonth() - birthDate.getMonth();
-    const dayDifference = today.getDate() - birthDate.getDate();
-
-    if (monthDifference < 0 || (monthDifference === 0 && dayDifference < 0)) {
-      age--;
-    }
-
-    if (age < 1) {
-      const months =
-        (today.getFullYear() - birthDate.getFullYear()) * 12 + monthDifference;
-      if (months < 1) {
-        const days = Math.floor(
-          (today.getTime() - birthDate.getTime()) / (1000 * 60 * 60 * 24)
-        );
-        return `${days} ngày tuổi`;
-      }
-      return `${months} tháng tuổi`;
-    }
-
-    return `${age} tuổi`;
-  };
 
   const currentPet = pets[currentCardIndex];
 

@@ -79,6 +79,22 @@ export class PaymentService {
       return buildError(error.message);
     }
   }
+  async findAllByUser(userId: number): Promise<AppActionResultDto> {
+    try {
+      return {
+        data: await this.repository.find({
+          where: {
+            userId: userId,
+          },
+          relations: ["user", "paymentPackage"],
+        }),
+        isSuccess: true,
+        message: ["Get data successfully"],
+      };
+    } catch (error) {
+      return buildError(error.message);
+    }
+  }
 
   findOne(id: number) {
     return `This action returns a #${id} payment`;
