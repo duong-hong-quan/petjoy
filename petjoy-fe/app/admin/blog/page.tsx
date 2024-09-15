@@ -36,12 +36,12 @@ import useCallApi from "@/api/callApi";
 import api from "@/api/config";
 import dynamic from "next/dynamic";
 import {
-  getStorage,
+  storage,
   ref,
   uploadBytes,
   getDownloadURL,
   deleteObject,
-} from "firebase/storage";
+} from "../../../firebase/firebase";
 import { v4 as uuidv4 } from "uuid";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
@@ -109,7 +109,6 @@ const AdminBlogsPage: React.FC = () => {
 
   const handleImageDelete = async () => {
     if (selectedBlog && selectedBlog.blogImg) {
-      const storage = getStorage();
       const imageRef = ref(storage, selectedBlog.blogImg);
       try {
         await deleteObject(imageRef);
@@ -121,7 +120,6 @@ const AdminBlogsPage: React.FC = () => {
   };
 
   const uploadImageToFirebase = async (file: File): Promise<string> => {
-    const storage = getStorage();
     const imageRef = ref(storage, `blog-images/${uuidv4()}`);
     await uploadBytes(imageRef, file);
     return getDownloadURL(imageRef);
