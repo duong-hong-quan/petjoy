@@ -215,6 +215,7 @@ const PetRegistrationForm = () => {
                     {...field}
                     label="Ngày sinh"
                     type="date"
+                    inputProps={{ max: new Date().toISOString().split("T")[0] }}
                     InputLabelProps={{ shrink: true }}
                     fullWidth
                     InputProps={{
