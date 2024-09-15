@@ -34,9 +34,8 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
-
 const drawerWidth = 240;
-
+import NewspaperOutlinedIcon from "@mui/icons-material/NewspaperOutlined";
 const menuItems = [
   {
     label: "Bảng điều khiển",
@@ -52,6 +51,11 @@ const menuItems = [
     label: "Gói đăng kí",
     icon: <MonetizationOnIcon />,
     link: "/admin/payment-package",
+  },
+  {
+    label: "Blog",
+    icon: <NewspaperOutlinedIcon />,
+    link: "/admin/blog",
   },
   { label: "Người dùng", icon: <PeopleIcon />, link: "/admin/user" },
 ];

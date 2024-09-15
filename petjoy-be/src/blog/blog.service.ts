@@ -63,7 +63,20 @@ export class BlogService {
       return buildError(error.message);
     }
   }
-
+  async getAll(): Promise<AppActionResultDto> {
+    try {
+      const categories = await this.repository.find({
+        relations: ["user", "category"],
+      });
+      return {
+        data: categories,
+        isSuccess: true,
+        message: ["success"],
+      };
+    } catch (error) {
+      return buildError(error.message);
+    }
+  }
   async findOne(id: number): Promise<AppActionResultDto> {
     try {
       const data = await this.repository.findOne({

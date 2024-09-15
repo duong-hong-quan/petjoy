@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Put,
 } from "@nestjs/common";
 import { BlogService } from "./blog.service";
 import { CreateBlogDto } from "./dto/create-blog.dto";
@@ -25,13 +26,17 @@ export class BlogController {
     return this.blogService.findAll();
   }
 
+  @Get("all")
+  getAll() {
+    return this.blogService.getAll();
+  }
   @Get(":id")
   findOne(@Param("id") id: string) {
     return this.blogService.findOne(+id);
   }
 
-  @Patch(":id")
-  update(@Param("id") id: string, @Body() updateBlogDto: UpdateBlogDto) {
+  @Put()
+  update(@Body() updateBlogDto: UpdateBlogDto) {
     return this.blogService.update(updateBlogDto);
   }
 
