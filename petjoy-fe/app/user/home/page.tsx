@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import {
   AppBar,
@@ -15,7 +16,10 @@ import {
 import { styled } from "@mui/system";
 import background from "../../../assets/img/background.png";
 import dogcat from "../../../assets/img/dogcat.png";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 export default function HomePage() {
+  const router = useRouter();
   return (
     <>
       <Box>
@@ -65,6 +69,12 @@ export default function HomePage() {
                 borderRadius: "1rem",
                 minWidth: "20rem",
                 fontSize: "1.2rem",
+              }}
+              onClick={() => {
+                router.push("/user/login");
+                toast.success(
+                  "Vui lòng tạo tài khoản bằng cách nhấn đăng nhập với google"
+                );
               }}
             >
               Tạo tài khoản
@@ -135,6 +145,7 @@ export default function HomePage() {
                     fontWeight: "bold",
                     fontSize: "1.4rem",
                     width: "100%",
+                    marginTop: "10px",
                   }}
                 >
                   THAM GIA NGAY

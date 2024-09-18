@@ -20,7 +20,7 @@ function Footer() {
               PETJOY
             </Typography>
             <Typography variant="body1">Trang chủ</Typography>
-            <Typography variant="body1">Quet</Typography>
+            <Typography variant="body1">Quẹt</Typography>
             <Typography variant="body1">Hồ sơ</Typography>
             <Typography variant="body1">Lượt thích</Typography>
             <Typography variant="body1">Khám phá</Typography>

@@ -25,12 +25,12 @@ const PackageCards = ({ packages, onSelect }: PackageCardsProps) => {
               borderRadius: "16px",
               overflow: "hidden",
               position: "relative",
+              background: (theme) =>
+                `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.secondary.main} 90%)`,
             }}
           >
             <Box
               sx={{
-                background: (theme) =>
-                  `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.secondary.main} 90%)`,
                 p: 3,
                 color: "white",
               }}
@@ -57,7 +57,7 @@ const PackageCards = ({ packages, onSelect }: PackageCardsProps) => {
             </Box>
 
             <Button
-              variant="contained"
+              variant="outlined"
               fullWidth
               sx={{
                 mt: "auto",
@@ -68,6 +68,8 @@ const PackageCards = ({ packages, onSelect }: PackageCardsProps) => {
                 "&:hover": {
                   transform: "scale(1.05)",
                 },
+                color: "white",
+                borderTop: "1px solid #ccc",
               }}
               onClick={() => onSelect(pkg)}
             >
