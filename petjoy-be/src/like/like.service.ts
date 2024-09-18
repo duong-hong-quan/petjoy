@@ -24,17 +24,15 @@ export class LikeService {
   ) {}
   async create(createLikeDto: CreateLikeDto): Promise<AppActionResultDto> {
     try {
-      const orignPet = await this.petRepository.findOne({
-        where: {
-          id: createLikeDto.originPetId,
-        },
-        relations: ["owner"],
-      });
-      const likePetDb = await this.petRepository.findOne({
-        where: {
-          id: createLikeDto.likePetId,
-        },
-      });
+      const [orignPet, likePetDb] = await Promise.all([
+        this.petRepository.findOne({
+          where: { id: createLikeDto.originPetId },
+          relations: ["owner"],
+        }),
+        this.petRepository.findOne({
+          where: { id: createLikeDto.likePetId },
+        }),
+      ]);
 
       if (!orignPet || !likePetDb) {
         return buildError("Not found");
@@ -46,42 +44,52 @@ export class LikeService {
           likePetId: createLikeDto.likePetId,
         },
       });
+
       if (likeDb) {
         return buildError("You already like this pet");
       }
-      const today = new Date();
-      const todayPlus7 = new Date(today.setDate(today.getDate() - 7));
 
+      const today = new Date();
+      const todayPlus7 = new Date(today);
+      todayPlus7.setDate(today.getDate() - 7);
       todayPlus7.setHours(0, 0, 0, 0);
 
-      const paymentDb = await this.paymentRepository.findOne({
-        where: {
-          userId: orignPet.ownerId,
-          paymentDate: todayPlus7,
-        },
-      });
-      const todayMinus1Months = new Date(today.setMonth(today.getMonth() - 1));
+      const todayMinus1Months = new Date(today);
+      todayMinus1Months.setMonth(today.getMonth() - 1);
       todayMinus1Months.setHours(0, 0, 0, 0);
-      const paymentDbMonth = await this.paymentRepository.findOne({
-        where: {
-          userId: orignPet.ownerId,
-          paymentDate: todayMinus1Months,
-        },
-      });
+
+      const [paymentDb, paymentDbMonth] = await Promise.all([
+        this.paymentRepository.findOne({
+          where: {
+            userId: orignPet.ownerId,
+            paymentDate: todayPlus7,
+          },
+        }),
+        this.paymentRepository.findOne({
+          where: {
+            userId: orignPet.ownerId,
+            paymentDate: todayMinus1Months,
+          },
+        }),
+      ]);
 
       if (paymentDb || paymentDbMonth) {
-        const like = await this.repository.create(createLikeDto);
+        const like = this.repository.create(createLikeDto);
         await this.repository.save(like);
-        const data = await this.repository.findOne({
-          where: {
-            originPetId: createLikeDto.likePetId,
-            likePetId: createLikeDto.originPetId,
-          },
-        });
-        const fullLike = await this.repository.findOne({
-          where: { id: like.id },
-          relations: ["originPet", "likePet"],
-        });
+
+        const [data, fullLike] = await Promise.all([
+          this.repository.findOne({
+            where: {
+              originPetId: createLikeDto.likePetId,
+              likePetId: createLikeDto.originPetId,
+            },
+          }),
+          this.repository.findOne({
+            where: { id: like.id },
+            relations: ["originPet", "likePet"],
+          }),
+        ]);
+
         if (data) {
           return {
             data: fullLike,
@@ -105,6 +113,35 @@ export class LikeService {
         if (likeCount > 5) {
           return buildError("Like limited");
         }
+
+        const like = this.repository.create(createLikeDto);
+        await this.repository.save(like);
+
+        const [data, fullLike] = await Promise.all([
+          this.repository.findOne({
+            where: {
+              originPetId: createLikeDto.likePetId,
+              likePetId: createLikeDto.originPetId,
+            },
+          }),
+          this.repository.findOne({
+            where: { id: like.id },
+            relations: ["originPet", "likePet"],
+          }),
+        ]);
+
+        if (data) {
+          return {
+            data: fullLike,
+            message: ["Matchingggg"],
+            isSuccess: true,
+          };
+        }
+        return {
+          data: fullLike,
+          message: ["Like created successfully"],
+          isSuccess: true,
+        };
       }
     } catch (error) {
       return buildError(error.message);
