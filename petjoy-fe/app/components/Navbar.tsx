@@ -126,9 +126,10 @@ function Navbar() {
         <Box
           sx={{
             display: { xs: "none", md: "flex" },
-            gap: 2,
             justifyContent: "space-between",
             alignItems: "center",
+            padding: 2,
+            gap: 2,
           }}
         >
           <Link
@@ -151,119 +152,102 @@ function Navbar() {
               fontSize: "1rem",
               fontWeight: "bold",
               display: "inline-block",
-              marginRight: "10px",
             }}
           >
             Blog
           </Link>
-        </Box>
-        {user ? (
-          <Box
-            sx={{ display: { xs: "none", md: "flex" }, alignItems: "center" }}
-          >
-            <Link
-              href={"/user/match"}
-              style={{
-                color: "white",
-                textDecoration: "none",
-                fontSize: "1rem",
-                fontWeight: "bold",
-                marginRight: 20,
-              }}
-            >
-              Quẹt
-            </Link>
-            <Link
-              href={"/user/package"}
-              style={{
-                color: "white",
-                textDecoration: "none",
-                fontSize: "1rem",
-                fontWeight: "bold",
-                marginRight: 20,
-              }}
-            >
-              Gói
-            </Link>
-            <Link
-              href={"/user/profile"}
-              style={{
-                color: "white",
-                textDecoration: "none",
-                fontSize: "1rem",
-                fontWeight: "bold",
-                marginRight: 20,
-                textWrap: "nowrap",
-              }}
-            >
-              Hồ sơ
-            </Link>
-            {user.isAdmin && (
+          {user ? (
+            <>
               <Link
-                href={"/admin/dashboard"}
+                href={"/user/match"}
                 style={{
                   color: "white",
                   textDecoration: "none",
                   fontSize: "1rem",
                   fontWeight: "bold",
-                  marginRight: 20,
-                  textWrap: "nowrap",
+                  display: "inline-block",
                 }}
               >
-                Quản lý
+                Quẹt
               </Link>
-            )}
-            <Button
-              sx={{
-                bgcolor: "white",
-                color: "#0080ff",
-                borderRadius: 10,
-                width: 140,
-                cursor: "pointer",
-                ":hover": {
+              <Link
+                href={"/user/package"}
+                style={{
+                  color: "white",
+                  textDecoration: "none",
+                  fontSize: "1rem",
+                  fontWeight: "bold",
+                }}
+              >
+                Gói
+              </Link>
+              <Link
+                href={"/user/profile"}
+                style={{
+                  color: "white",
+                  textDecoration: "none",
+                  fontSize: "1rem",
+                  fontWeight: "bold",
+                  textWrap: "nowrap",
+                  display: "inline-block",
+                }}
+              >
+                Hồ sơ
+              </Link>
+              {user.isAdmin && (
+                <Link
+                  href={"/admin/dashboard"}
+                  style={{
+                    color: "white",
+                    textDecoration: "none",
+                    fontSize: "1rem",
+                    fontWeight: "bold",
+                    textWrap: "nowrap",
+                    display: "inline-block",
+                  }}
+                >
+                  Quản lý
+                </Link>
+              )}
+              <Button
+                sx={{
+                  bgcolor: "white",
+                  color: "#0080ff",
+                  borderRadius: 10,
+                  width: 140,
                   cursor: "pointer",
-                },
-                textWrap: "nowrap",
-              }}
-              variant="outlined"
-              onClick={() => {
-                dispatch(logout());
-                router.push("/");
-              }}
-            >
-              Đăng xuất
-            </Button>
-          </Box>
-        ) : (
-          <Box
-            sx={{
-              display: {
-                xs: "none",
-                md: "flex",
-                gap: 2,
-                justifyContent: "space-between",
-                alignItems: "center",
-                fontWeight: "bold",
-                sm: { display: "flex-col" },
-              },
-            }}
-          >
-            <Link href={"/user/login"}>Đăng nhập</Link>
-            {/* <Button
-              color="inherit"
-              variant="outlined"
+                  ":hover": {
+                    cursor: "pointer",
+                  },
+                  textWrap: "nowrap",
+                  display: "inline-block",
+                }}
+                variant="outlined"
+                onClick={() => {
+                  dispatch(logout());
+                  router.push("/");
+                }}
+              >
+                Đăng xuất
+              </Button>
+            </>
+          ) : (
+            <Box
               sx={{
-                ml: 2,
-                backgroundColor: "white",
-                color: "#0080ff",
-                borderRadius: 10,
-                width: 140,
+                display: {
+                  xs: "none",
+                  md: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  fontWeight: "bold",
+                  sm: { display: "flex-col" },
+                },
               }}
             >
-              Đăng ký
-            </Button> */}
-          </Box>
-        )}
+              <Link href={"/user/login"}>Đăng nhập</Link>
+            </Box>
+          )}
+        </Box>
       </Toolbar>
       <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)}>
         {drawerList}

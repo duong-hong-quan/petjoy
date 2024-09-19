@@ -79,20 +79,6 @@ export default function HomePage() {
             >
               Tạo tài khoản
             </Button>
-            <Typography
-              variant="body2"
-              sx={{ mt: 2, textAlign: "center", fontSize: "1rem" }}
-            >
-              <span className="font-bold">
-                Bằng cách nhấp vào tiếp tục, bạn đồng ý với
-              </span>
-              <br />
-              <span className="text-[#0080ff] mx-2">Điều khoản dịch vụ</span>và
-              <span className="mx-2 text-[#0080ff]">
-                Chính sách quyền riêng tư
-              </span>
-              của chúng tôi
-            </Typography>
           </Container>
         </Box>
         <Box>

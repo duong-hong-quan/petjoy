@@ -163,12 +163,12 @@ const PetProfileChat = () => {
             <Button
               variant="contained"
               sx={{
-                backgroundColor: "#007EFF",
                 borderRadius: "20px",
                 px: 3,
                 fontWeight: "bold",
-                "&:hover": { backgroundColor: "#0056b3" },
                 textWrap: "nowrap",
+                backgroundColor: "white",
+                color: "black",
               }}
               onClick={() => route.push("/user/match")}
             >
@@ -177,13 +177,12 @@ const PetProfileChat = () => {
             <Button
               variant="outlined"
               sx={{
+                backgroundColor: "#007EFF",
                 borderRadius: "20px",
                 px: 3,
-                color: "black",
-                borderColor: "black",
                 fontWeight: "bold",
-                "&:hover": { backgroundColor: "#f0f0f0" },
                 textWrap: "nowrap",
+                color: "white",
               }}
               onClick={() => {
                 route.push("/user/chat");

@@ -12,11 +12,17 @@ import {
   Avatar,
   Box,
   Chip,
+  IconButton,
+  CardContent,
+  Card,
+  CardActions,
 } from "@mui/material";
 import {
   Person as PersonIcon,
   Pets as PetsIcon,
   AttachMoney as MoneyIcon,
+  Delete,
+  Edit,
 } from "@mui/icons-material";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/redux/store";
@@ -43,32 +49,6 @@ const UserProfile = () => {
   useEffect(() => {
     fetchData();
   }, []);
-  // const payments = [
-  //   {
-  //     id: 1,
-  //     amount: 50.0,
-  //     date: "2024-09-01",
-  //     method: "Credit Card",
-  //   },
-  //   {
-  //     id: 2,
-  //     amount: 35.5,
-  //     date: "2024-08-15",
-  //     method: "PayPal",
-  //   },
-  //   {
-  //     id: 3,
-  //     amount: 75.25,
-  //     date: "2024-07-30",
-  //     method: "Bank Transfer",
-  //   },
-  //   {
-  //     id: 4,
-  //     amount: 60.0,
-  //     date: "2024-07-15",
-  //     method: "Credit Card",
-  //   },
-  // ];
   const getStatusLabel = (status: boolean) => {
     switch (status) {
       case false:
@@ -93,6 +73,7 @@ const UserProfile = () => {
               color: "white",
               display: "flex",
               alignItems: "center",
+              borderRadius: "20px",
             }}
           >
             <Avatar
@@ -108,7 +89,10 @@ const UserProfile = () => {
               <Typography variant="h4" gutterBottom fontWeight="bold">
                 {user?.name}
               </Typography>
-              <Typography variant="body1" sx={{ mb: 1 }}>
+              <Typography
+                variant="body1"
+                sx={{ mb: 1, display: "inline-block" }}
+              >
                 <PersonIcon sx={{ mr: 1, verticalAlign: "middle" }} />
                 {user?.email}
               </Typography>
@@ -118,7 +102,7 @@ const UserProfile = () => {
 
         {/* Pet Profiles */}
         <Grid item xs={12} md={6}>
-          <Paper elevation={3} sx={{ p: 3, height: "100%" }}>
+          <Paper elevation={3} sx={{ p: 3, height: "100%", boxShadow: "none" }}>
             <Typography
               variant="h5"
               gutterBottom
@@ -127,54 +111,60 @@ const UserProfile = () => {
               <PetsIcon sx={{ mr: 1 }} />
               Hồ sơ thú cưng
             </Typography>
-            <List>
+            <Box display="flex" flexDirection="column" gap={2}>
               {pets &&
                 pets.length > 0 &&
-                pets.map((pet, index) => (
-                  <React.Fragment key={pet.id}>
-                    <ListItem
-                      sx={{ flexDirection: "column", alignItems: "flex-start" }}
-                    >
-                      <ListItemText
-                        primary={
-                          <Typography variant="h6" color="primary">
-                            {pet.name}
-                          </Typography>
-                        }
-                        secondary={
-                          <Box>
-                            <Typography variant="body2" color="text.secondary">
-                              Giống: {pet.breed}
-                            </Typography>
-                            <Typography variant="body2" color="text.secondary">
-                              Đang tìm kiếm: {pet.isHiringPetType.name}
-                            </Typography>
-                            <Chip
-                              label={pet.petType.name}
-                              sx={{ mr: 1, mb: 1 }}
-                              color="secondary"
-                              size="small"
-                            />
-                            <Chip
-                              label={`${calculateAge(pet.dob.toString())} `}
-                              sx={{ mr: 1, mb: 1 }}
-                              color="info"
-                              size="small"
-                            />
-                          </Box>
-                        }
-                      />
-                    </ListItem>
-                    {index < pets.length - 1 && <Divider />}
-                  </React.Fragment>
+                pets.map((pet) => (
+                  <Card
+                    key={pet.id}
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      borderRadius: "20px",
+                    }}
+                  >
+                    <CardContent>
+                      <Typography variant="h6" color="primary">
+                        {pet.name}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Giống: {pet.breed}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Đang tìm kiếm: {pet.isHiringPetType.name}
+                      </Typography>
+                      <Box mt={1}>
+                        <Chip
+                          label={pet.petType.name}
+                          sx={{ mr: 1, mb: 1 }}
+                          color="secondary"
+                          size="small"
+                        />
+                        <Chip
+                          label={`${calculateAge(pet.dob.toString())} `}
+                          sx={{ mr: 1, mb: 1 }}
+                          color="info"
+                          size="small"
+                        />
+                      </Box>
+                    </CardContent>
+                    <CardActions>
+                      <IconButton color="primary" aria-label="edit">
+                        <Edit />
+                      </IconButton>
+                      <IconButton color="error" aria-label="delete">
+                        <Delete />
+                      </IconButton>
+                    </CardActions>
+                  </Card>
                 ))}
-            </List>
+            </Box>
           </Paper>
         </Grid>
 
         {/* Payment History */}
         <Grid item xs={12} md={6}>
-          <Paper elevation={3} sx={{ p: 3, height: "100%" }}>
+          <Paper elevation={3} sx={{ p: 3, height: "100%", boxShadow: "none" }}>
             <Typography
               variant="h5"
               gutterBottom
