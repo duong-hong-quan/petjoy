@@ -64,7 +64,7 @@ function Footer() {
               packages.map((item, index) => (
                 <Typography key={index} variant="body1">
                   {item?.duration === 0 ? "Gói tuần" : "Gói tháng"}:{" "}
-                  {item.price}
+                  {parseInt(item.price.toString()).toLocaleString()} ₫
                 </Typography>
               ))}
           </Grid>
