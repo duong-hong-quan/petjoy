@@ -24,7 +24,7 @@ function Footer() {
             <Typography variant="body1">Hồ sơ</Typography>
             <Typography variant="body1">Lượt thích</Typography>
             <Typography variant="body1">Khám phá</Typography>
-            <Typography variant="body1">Mèo vặt</Typography>
+            <Typography variant="body1">Mẹo vặt</Typography>
           </Grid>
           <Grid item xs={12} md={3}>
             <Typography variant="h6" gutterBottom sx={{ fontWeight: "bold" }}>

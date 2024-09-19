@@ -21,7 +21,7 @@ const Blogs: React.FC<Category> = ({ name, id, blogs }) => {
               color: "white",
               padding: "1rem 2rem",
               fontWeight: "bold",
-              width: "200px",
+              width: "fit-content",
               marginBottom: "2rem",
               borderRadius: "0 20px 20px 0",
 
@@ -37,6 +37,7 @@ const Blogs: React.FC<Category> = ({ name, id, blogs }) => {
                 backgroundColor: "#0080ff",
               },
               fontSize: "1.4rem",
+              textWrap: "nowrap",
             }}
           >
             {name}

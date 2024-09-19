@@ -113,15 +113,7 @@ const Package = () => {
               <Typography variant="h5" component="h2" fontWeight="bold">
                 {selectedPackage.name}
               </Typography>
-              <Chip
-                label="Gói đặc biệt"
-                size="small"
-                sx={{
-                  bgcolor: "primary.light",
-                  color: "primary.contrastText",
-                  mt: 1,
-                }}
-              />
+
               <Close
                 sx={{
                   position: "absolute",
@@ -143,7 +135,10 @@ const Package = () => {
               </Typography>
               <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
                 <CheckCircle color="success" sx={{ mr: 1 }} />
-                <Typography variant="body2">Sử dụng trong 30 ngày</Typography>
+                <Typography variant="body2">
+                  Sử dụng trong {selectedPackage.duration === 0 ? "7" : "30"}{" "}
+                  ngày
+                </Typography>
               </Box>
               <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
                 <CheckCircle color="success" sx={{ mr: 1 }} />
