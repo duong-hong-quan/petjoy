@@ -1,6 +1,22 @@
 "use client";
+import useCallApi from "@/api/callApi";
+import api from "@/api/config";
+import { PaymentPackage } from "@/type";
 import { Typography, Container, Grid, Box, Link } from "@mui/material";
+import { useEffect, useState } from "react";
 function Footer() {
+  const { callApi, error, loading } = useCallApi(api);
+  const [packages, setPackkages] = useState<PaymentPackage[]>();
+  const fetchData = async () => {
+    const response = await callApi("payment-package", "GET");
+    if (response.isSuccess) {
+      setPackkages(response.data);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
   return (
     <Box
       position={"static"}
@@ -43,8 +59,14 @@ function Footer() {
             >
               Các gói tính năng cao cấp
             </Typography>
-            <Typography variant="body1">Theo tuần: 35.000đ/ tuần</Typography>
-            <Typography variant="body1">Theo tháng: 138.000đ/ tháng</Typography>
+            {packages &&
+              packages.length > 0 &&
+              packages.map((item) => (
+                <Typography variant="body1">
+                  {item?.duration === 0 ? "Gói tuần" : "Gói tháng"}:{" "}
+                  {item.price}
+                </Typography>
+              ))}
           </Grid>
         </Grid>
       </Container>
