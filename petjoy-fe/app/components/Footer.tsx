@@ -61,8 +61,8 @@ function Footer() {
             </Typography>
             {packages &&
               packages.length > 0 &&
-              packages.map((item) => (
-                <Typography variant="body1">
+              packages.map((item, index) => (
+                <Typography key={index} variant="body1">
                   {item?.duration === 0 ? "Gói tuần" : "Gói tháng"}:{" "}
                   {item.price}
                 </Typography>
