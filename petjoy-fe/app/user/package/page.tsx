@@ -18,7 +18,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/app/redux/store";
 import { toast } from "react-toastify";
 import { CheckCircle, Close } from "@mui/icons-material";
-import QR from "../../../assets/img/QR.png";
+import QR from "../../../assets/img/QR.jpeg";
 const Package = () => {
   const [packages, setPackages] = useState<PaymentPackage[]>([]);
   const { callApi } = useCallApi(api);

@@ -9,8 +9,8 @@ import {
   Divider,
 } from "@mui/material";
 import { Google as GoogleIcon } from "@mui/icons-material";
-import background from "../../../assets/img/background.png";
-import logo from "../../../assets/img/paw-logo.png";
+import background from "../../../assets/img/background.jpeg";
+import logo from "../../../assets/img/paw-logo.jpeg";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
 import { parseJwt, showError } from "@/utils/utility";
