@@ -79,22 +79,27 @@ export class UserService {
       where: {
         email: request.username,
         password: request.password,
-        isBanned: false,
       },
     });
-    return {
-      data,
-      message: data ? ["Login success"] : ["Login failed"],
-      isSuccess: !!data,
-    };
+    if (data && data.isBanned) {
+      return buildError("User is banned");
+    } else {
+      return {
+        data,
+        message: data ? ["Login success"] : ["Login failed"],
+        isSuccess: !!data,
+      };
+    }
   }
 
   async getUserByEmail(email: string): Promise<AppActionResultDto> {
     const data = await this.repository.findOne({
-      where: { email, isBanned: false },
+      where: { email },
     });
     if (!data) {
       return buildError("User not found");
+    } else if (data.isBanned) {
+      return buildError("User is banned");
     }
     return {
       data,
@@ -145,5 +150,20 @@ export class UserService {
 
     const { id_token } = response.data;
     return { id_token };
+  }
+  async banUser(id: number): Promise<AppActionResultDto> {
+    const user = await this.repository.findOne({
+      where: { id },
+    });
+    if (!user) {
+      return buildError("User not found");
+    }
+    user.isBanned = !user.isBanned;
+    await this.repository.save(user);
+    return {
+      data: user,
+      message: ["User banned successfully"],
+      isSuccess: true,
+    };
   }
 }

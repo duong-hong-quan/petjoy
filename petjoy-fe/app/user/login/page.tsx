@@ -9,8 +9,8 @@ import {
   Divider,
 } from "@mui/material";
 import { Google as GoogleIcon } from "@mui/icons-material";
-import background from "../../../assets/img/background.jpeg";
-import logo from "../../../assets/img/paw-logo.jpeg";
+import background from "../../../assets/img/background.png";
+import logo from "../../../assets/img/paw-logo.png";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
 import { parseJwt, showError } from "@/utils/utility";
@@ -84,7 +84,15 @@ export default function LoginPage() {
               document.cookie = `isAdmin=${
                 response.data.isAdmin
               }; path=/; max-age=${7 * 24 * 60 * 60}; secure; samesite=strict`;
-            } else {
+            } else if (
+              !response.isSuccess &&
+              response.message.includes("User is banned")
+            ) {
+              return showError(["User is banned"]);
+            } else if (
+              !response.isSuccess &&
+              !response.message.includes("User is banned")
+            ) {
               const response = await callApi("user", "POST", {
                 email: decodedToken.email,
                 password: "google123@",

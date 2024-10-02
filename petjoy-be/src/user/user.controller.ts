@@ -8,6 +8,7 @@ import {
   Delete,
   Redirect,
   Query,
+  Put,
 } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { CreateUserDto } from "./dto/create-user.dto";
@@ -30,11 +31,6 @@ export class UserController {
   findAll() {
     return this.userService.findAll();
   }
-
-  // @Get(":id")
-  // findOne(@Param("id") id: string) {
-  //   return this.userService.findOne(+id);
-  // }
 
   @Patch(":id")
   update(@Param("id") id: string, @Body() updateUserDto: UpdateUserDto) {
@@ -90,5 +86,9 @@ export class UserController {
     const token = tokens.id_token; // Assuming you want to use the access token
     const redirectUrl = `http://localhost:3000/login?token=${token}`;
     return { url: redirectUrl };
+  }
+  @Put("ban/:id")
+  banUser(@Param("id") id: number) {
+    return this.userService.banUser(id);
   }
 }

@@ -14,8 +14,8 @@ import {
   Link,
 } from "@mui/material";
 import { styled } from "@mui/system";
-import background from "../../../assets/img/background.jpeg";
-import dogcat from "../../../assets/img/dogcat.jpeg";
+import background from "../../../assets/img/background.png";
+import dogcat from "../../../assets/img/dogcat.png";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 export default function HomePage() {

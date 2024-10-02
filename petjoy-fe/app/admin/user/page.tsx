@@ -18,7 +18,8 @@ import {
   Button,
 } from "@mui/material";
 import { useState, useEffect } from "react";
-
+import BlockIcon from "@mui/icons-material/Block";
+import KeyIcon from "@mui/icons-material/Key";
 function ManagementUser() {
   const { callApi, loading } = useCallApi(api);
   const [users, setUsers] = useState<User[]>([]);
@@ -42,6 +43,12 @@ function ManagementUser() {
         user.email.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setUsers(filtered);
+  };
+  const bannedUser = async (id: number) => {
+    const response = await callApi(`/user/ban/${id}`, "PUT");
+    if (response.isSuccess) {
+      fetchData();
+    }
   };
 
   useEffect(() => {
@@ -142,6 +149,16 @@ function ManagementUser() {
                       color: "white",
                     }}
                   >
+                    Trạng thái
+                  </TableCell>
+                  <TableCell
+                    align="center"
+                    sx={{
+                      fontWeight: "bold",
+                      fontSize: "1.1rem",
+                      color: "white",
+                    }}
+                  >
                     Hành động
                   </TableCell>
                 </TableRow>
@@ -162,12 +179,18 @@ function ManagementUser() {
                     <TableCell align="center">{user.name}</TableCell>
                     <TableCell align="center">{user.email}</TableCell>
                     <TableCell align="center">
+                      {user.isBanned ? "Banned" : "Hoạt động"}
+                    </TableCell>
+
+                    <TableCell align="center">
                       <Button
                         variant="contained"
                         sx={{ backgroundColor: "#007EFF", color: "white" }}
-                        onClick={() => {}}
+                        onClick={() => {
+                          bannedUser(user.id);
+                        }}
                       >
-                        Ban
+                        {user.isBanned ? <KeyIcon /> : <BlockIcon />}
                       </Button>
                     </TableCell>
                   </TableRow>

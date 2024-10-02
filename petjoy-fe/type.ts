@@ -19,6 +19,7 @@ export interface User {
 
   profilePicture: string;
   isAdmin: boolean;
+  isBanned: boolean;
 }
 
 export interface Pet {
