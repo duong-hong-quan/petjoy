@@ -154,3 +154,22 @@ export interface Blog {
   user: User;
   category: Category;
 }
+export interface BanReport {
+  id: number;
+
+  reason: string;
+
+  reporterId: number;
+
+  reportedId: number;
+
+  isResolved: boolean;
+
+  resolvedAt: Date;
+
+  createdAt: Date;
+
+  reporter: User;
+
+  reported: User;
+}

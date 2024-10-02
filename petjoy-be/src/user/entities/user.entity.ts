@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
 import { Pet } from "../../pet/entities/pet.entity";
 import { Payment } from "../../payment/entities/payment.entity";
 import { Blog } from "../../blog/entities/blog.entity";
+import { BanReport } from "../../ban-report/entities/ban-report.entity";
 
 @Entity()
 export class User {
@@ -30,4 +31,8 @@ export class User {
   payments: Payment[];
   @OneToMany(() => Blog, (blog) => blog.user)
   blogs: Blog[];
+  @OneToMany(() => BanReport, (report) => report.reporter)
+  reporter: BanReport[];
+  @OneToMany(() => BanReport, (report) => report.reported)
+  reported: BanReport[];
 }

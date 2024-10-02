@@ -14,6 +14,7 @@ import { JwtService } from "@nestjs/jwt";
 import { ReportModule } from './report/report.module';
 import { BlogModule } from './blog/blog.module';
 import { CategoryModule } from './category/category.module';
+import { BanReportModule } from './ban-report/ban-report.module';
 envConfig();
 
 @Module({
@@ -36,6 +37,7 @@ envConfig();
     ReportModule,
     BlogModule,
     CategoryModule,
+    BanReportModule,
   ],
   controllers: [AppController],
   providers: [AppService, FirebaseAuthGuard, JwtService],

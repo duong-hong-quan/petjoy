@@ -28,8 +28,14 @@ import { createEntity, getEntity } from "@/api/databaseApi";
 import { useRouter } from "next/navigation";
 import { Message, Room } from "@/type";
 import CloseIcon from "@mui/icons-material/Close";
+import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
+import api from "@/api/config";
+
+import useCallApi from "@/api/callApi";
+import { toast } from "react-toastify";
 const PetProfileChat = () => {
   const user = useSelector((state: RootState) => state.auth.user);
+  const { callApi } = useCallApi(api);
   const route = useRouter();
   const [showSidebar, setShowSidebar] = useState(true);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -41,6 +47,8 @@ const PetProfileChat = () => {
   const [rooms, setRooms] = useState<Room[]>([]);
   const [selectedRoom, setSelectedRoom] = useState<Room | null>();
   const pet = useSelector((state: RootState) => state.auth.pet || null);
+  const [showReportDialog, setShowReportDialog] = useState(false);
+  const [reasonField, setReasonField] = useState("");
   useEffect(() => {
     const roomsRef = ref(database, "room");
     onValue(roomsRef, (snapshot) => {
@@ -106,7 +114,76 @@ const PetProfileChat = () => {
       handleSendMessage();
     }
   };
-
+  const handleReport = async () => {
+    if (!selectedRoom) return;
+    const banReport = {
+      reason: reasonField,
+      reporterId: user?.id,
+      reportedId:
+        selectedRoom.petOne.ownerId === user?.id
+          ? selectedRoom.petTwo.ownerId
+          : selectedRoom.petOne.ownerId,
+    };
+    const respose = await callApi(`/ban-report`, "POST", banReport);
+    if (respose.isSuccess) {
+      toast.success("Báo cáo thành công");
+      setShowReportDialog(false);
+    } else {
+      toast.error("Báo cáo thất bại");
+      setShowReportDialog(false);
+    }
+  };
+  if (showReportDialog) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <Paper
+          sx={{
+            padding: 2,
+            display: "flex",
+            flexDirection: "column",
+            width: 300,
+          }}
+        >
+          <Typography variant="h5" sx={{ textAlign: "center" }}>
+            Báo cáo người dùng
+          </Typography>
+          <TextField
+            sx={{ marginTop: 2 }}
+            label="Lý do"
+            variant="outlined"
+            multiline
+            maxRows={3}
+            value={reasonField}
+            onChange={(e) => setReasonField(e.target.value)}
+          />
+          <div className="flex justify-between">
+            <Button
+              sx={{ marginTop: 2 }}
+              variant="contained"
+              color="primary"
+              onClick={() => handleReport()}
+            >
+              Gửi
+            </Button>
+            <Button
+              sx={{ marginTop: 2, backgroundColor: "gray", marginLeft: 2 }}
+              variant="contained"
+              onClick={() => setShowReportDialog(false)}
+            >
+              Đóng
+            </Button>
+          </div>
+        </Paper>
+      </Box>
+    );
+  }
   return (
     <Box
       sx={{
@@ -308,6 +385,11 @@ const PetProfileChat = () => {
                 </Typography>
                 <Typography>Đang hoạt động</Typography>
               </Box>
+              <IconButton
+                onClick={() => setShowReportDialog(!showReportDialog)}
+              >
+                <PriorityHighIcon />
+              </IconButton>
               <IconButton onClick={() => setSelectedRoom(null)}>
                 <CloseIcon />
               </IconButton>
