@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   AppBar,
   Toolbar,
@@ -18,8 +18,16 @@ import background from "../../../assets/img/background.png";
 import dogcat from "../../../assets/img/dogcat.png";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/redux/store";
+import { Pet } from "@/type";
+import useCallApi from "@/api/callApi";
+import api from "@/api/config";
+
 export default function HomePage() {
   const router = useRouter();
+  const user = useSelector((state: RootState) => state.auth.user);
+
   return (
     <>
       <Box>
@@ -61,24 +69,26 @@ export default function HomePage() {
             >
               Chỉ mất một phút để mang lại niềm vui cho thú cưng của bạn
             </Typography>
-            <Button
-              sx={{
-                mt: 2,
-                backgroundColor: "#0080ff",
-                color: "white",
-                borderRadius: "1rem",
-                minWidth: "20rem",
-                fontSize: "1.2rem",
-              }}
-              onClick={() => {
-                router.push("/user/login");
-                toast.success(
-                  "Vui lòng tạo tài khoản bằng cách nhấn đăng nhập với google"
-                );
-              }}
-            >
-              Tạo tài khoản
-            </Button>
+            {!user && (
+              <Button
+                sx={{
+                  mt: 2,
+                  backgroundColor: "#0080ff",
+                  color: "white",
+                  borderRadius: "1rem",
+                  minWidth: "20rem",
+                  fontSize: "1.2rem",
+                }}
+                onClick={() => {
+                  router.push("/user/login");
+                  toast.success(
+                    "Vui lòng tạo tài khoản bằng cách nhấn đăng nhập với google"
+                  );
+                }}
+              >
+                Tạo tài khoản
+              </Button>
+            )}
           </Container>
         </Box>
         <Box>

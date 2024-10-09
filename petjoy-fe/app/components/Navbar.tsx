@@ -65,7 +65,12 @@ function Navbar() {
                 <ListItemText primary="Quản lý" />
               </ListItem>
             )}
-            <ListItem onClick={() => dispatch(logout())}>
+            <ListItem
+              onClick={() => {
+                dispatch(logout());
+                router.push("/");
+              }}
+            >
               <ListItemText primary="Đăng xuất" />
             </ListItem>
           </>

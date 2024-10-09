@@ -14,7 +14,7 @@ const AuthWrapper = ({ children }: AuthWrapperProps): JSX.Element => {
 
   useEffect(() => {
     if (!user) {
-      router.push("/login");
+      router.push("/user/login");
     }
   }, [user, router]);
 

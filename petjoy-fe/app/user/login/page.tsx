@@ -36,7 +36,19 @@ export default function LoginPage() {
     handleSubmit,
     formState: { errors },
   } = useForm<LoginRequestDto>();
-
+  const fetchData = async () => {
+    const response = await callApi(`/pet/by-user-id/${user?.id}`, "GET");
+    if (response.isSuccess) {
+      if (response.data.length == 0) {
+        router.push(`/user/pet`);
+      }
+    }
+  };
+  useEffect(() => {
+    if (user) {
+      fetchData();
+    }
+  }, [user]);
   const onSubmit = async (data: LoginRequestDto) => {
     const response = await callApi("user/login", "POST", data);
     if (response) {
@@ -81,6 +93,7 @@ export default function LoginPage() {
           if (response) {
             if (response.isSuccess) {
               dispatch(login(response.data));
+
               document.cookie = `isAdmin=${
                 response.data.isAdmin
               }; path=/; max-age=${7 * 24 * 60 * 60}; secure; samesite=strict`;
@@ -101,6 +114,7 @@ export default function LoginPage() {
               });
               if (response?.isSuccess) {
                 dispatch(login(response.data));
+
                 document.cookie = `isAdmin=${
                   response.data.isAdmin
                 }; path=/; max-age=${
