@@ -185,7 +185,7 @@ const ProfileUpdateModal: React.FC<ProfileUpdateModalProps> = ({
               type="email"
               value={formData.email}
               onChange={handleInputChange}
-              required
+              disabled
             />
             <TextField
               fullWidth
