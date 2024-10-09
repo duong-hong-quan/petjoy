@@ -96,6 +96,8 @@ const UserProfile = () => {
               display: "flex",
               alignItems: "center",
               borderRadius: "20px",
+              flexDirection: { xs: "column", md: "row" },
+              justifyContent: { xs: "center", md: "space-between" },
             }}
           >
             <Avatar
@@ -107,8 +109,21 @@ const UserProfile = () => {
               }}
               src={user?.profilePicture}
             ></Avatar>
-            <Box>
-              <Typography variant="h4" gutterBottom fontWeight="bold">
+            <Box
+              sx={{
+                flexGrow: 1,
+                display: "flex",
+                flexDirection: "column",
+              }}
+            >
+              <Typography
+                variant="h4"
+                gutterBottom
+                fontWeight="bold"
+                sx={{
+                  textAlign: { xs: "center", md: "left" },
+                }}
+              >
                 {user?.name}
               </Typography>
               <Typography
@@ -127,8 +142,6 @@ const UserProfile = () => {
                 padding: "10px 20px",
                 fontSize: "1rem",
                 fontWeight: "bold",
-
-                marginLeft: "auto",
               }}
               onClick={() => setIsModalOpen(!isModalOpen)}
             >
