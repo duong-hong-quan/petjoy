@@ -92,7 +92,6 @@ const ProfileUpdateModal: React.FC<ProfileUpdateModalProps> = ({
       // Update the user profile
       await onUpdateProfile({
         ...formData,
-        password: user.password,
         profilePicture: profilePictureUrl,
       });
 

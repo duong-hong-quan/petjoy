@@ -50,10 +50,10 @@ export default function LoginPage() {
     }
   }, [user]);
   const onSubmit = async (data: LoginRequestDto) => {
+    debugger;
     const response = await callApi("user/login", "POST", data);
     if (response) {
       if (response.isSuccess) {
-        window.location.href = response.data.url;
         dispatch(login(response.data.user));
         toast.success("Đăng nhập thành công");
       } else {
