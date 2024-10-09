@@ -66,7 +66,7 @@ const PetRegistrationForm = () => {
           name: data.name,
           dob: data.dob,
           breed: data.breed,
-          profilePicture: uploadedImages[0] || "string",
+          profilePicture: uploadedImages[0] || "",
           ownerId: user.id,
           petTypeId: Number(data.petTypeId),
           isHiringPetTypeId: Number(data.isHiringPetTypeId),

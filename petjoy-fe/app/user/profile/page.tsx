@@ -16,6 +16,7 @@ import {
   CardContent,
   Card,
   CardActions,
+  Button,
 } from "@mui/material";
 import {
   Person as PersonIcon,
@@ -24,18 +25,24 @@ import {
   Delete,
   Edit,
 } from "@mui/icons-material";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/app/redux/store";
-import { Payment, Pet } from "@/type";
+import { Payment, Pet, User } from "@/type";
 import useCallApi from "@/api/callApi";
 import api from "@/api/config";
-import { calculateAge } from "@/utils/utility";
+import { calculateAge, showError } from "@/utils/utility";
+import ProfileUpdateModal from "@/app/components/UpdateProfileModal";
+import { useRouter } from "next/navigation";
+import { login } from "@/app/redux/features/authSlice";
 const UserProfile = () => {
   const user = useSelector((state: RootState) => state.auth.user);
   const [pets, setPets] = useState<Pet[] | []>();
   const [payments, setPayments] = useState<Payment[] | []>();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { loading, callApi, error } = useCallApi(api);
+  const dispatch = useDispatch();
+  const router = useRouter();
   const fetchData = async () => {
     const data = await callApi(`pet/by-user-id/${user?.id}`, "GET");
     if (data.isSuccess) {
@@ -57,6 +64,21 @@ const UserProfile = () => {
       case true:
         return "Đang hoạt động";
         break;
+    }
+  };
+
+  const handleUpdateProfile = async (userData: Partial<User>) => {
+    const response = await callApi(`user/${user?.id}`, "PUT", userData);
+    if (response.isSuccess) {
+      const fetchUser = await callApi(`user/email/${user?.email}`, "GET");
+      if (fetchUser.isSuccess) {
+        dispatch(login(fetchUser.data));
+        setIsModalOpen(false);
+      } else {
+        showError(fetchUser.message);
+      }
+    } else {
+      showError(response.message);
     }
   };
   return (
@@ -97,20 +119,47 @@ const UserProfile = () => {
                 {user?.email}
               </Typography>
             </Box>
+            <Button
+              sx={{
+                backgroundColor: "#FDBA13",
+                color: "white",
+                borderRadius: "10px",
+                padding: "10px 20px",
+                fontSize: "1rem",
+                fontWeight: "bold",
+
+                marginLeft: "auto",
+              }}
+              onClick={() => setIsModalOpen(!isModalOpen)}
+            >
+              Cập nhật thông tin
+            </Button>
           </Paper>
         </Grid>
 
         {/* Pet Profiles */}
         <Grid item xs={12} md={6}>
           <Paper elevation={3} sx={{ p: 3, height: "100%", boxShadow: "none" }}>
-            <Typography
-              variant="h5"
-              gutterBottom
-              sx={{ display: "flex", alignItems: "center" }}
-            >
-              <PetsIcon sx={{ mr: 1 }} />
-              Hồ sơ thú cưng
-            </Typography>
+            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+              <Typography
+                variant="h5"
+                gutterBottom
+                sx={{ display: "flex", alignItems: "center" }}
+              >
+                <PetsIcon sx={{ mr: 1 }} />
+                Hồ sơ thú cưng
+              </Typography>
+              <Button
+                variant="contained"
+                color="primary"
+                sx={{ mb: 2 }}
+                onClick={() => {
+                  router.push("/user/pet/pet-create");
+                }}
+              >
+                Tạo hồ sơ
+              </Button>
+            </Box>
             <Box display="flex" flexDirection="column" gap={2}>
               {pets &&
                 pets.length > 0 &&
@@ -210,6 +259,14 @@ const UserProfile = () => {
           </Paper>
         </Grid>
       </Grid>
+      {user && (
+        <ProfileUpdateModal
+          open={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          user={user}
+          onUpdateProfile={handleUpdateProfile}
+        />
+      )}
     </Container>
   );
 };
