@@ -34,6 +34,7 @@ import { calculateAge, showError } from "@/utils/utility";
 import ProfileUpdateModal from "@/app/components/UpdateProfileModal";
 import { useRouter } from "next/navigation";
 import { login } from "@/app/redux/features/authSlice";
+import { toast } from "react-toastify";
 const UserProfile = () => {
   const user = useSelector((state: RootState) => state.auth.user);
   const [pets, setPets] = useState<Pet[] | []>();
@@ -211,10 +212,31 @@ const UserProfile = () => {
                       </Box>
                     </CardContent>
                     <CardActions>
-                      <IconButton color="primary" aria-label="edit">
+                      <IconButton
+                        color="primary"
+                        aria-label="edit"
+                        onClick={() =>
+                          router.push("/user/pet/pet-create?id=" + pet.id)
+                        }
+                      >
                         <Edit />
                       </IconButton>
-                      <IconButton color="error" aria-label="delete">
+                      <IconButton
+                        color="error"
+                        aria-label="delete"
+                        onClick={async () => {
+                          const response = await callApi(
+                            `pet/${pet.id}`,
+                            "DELETE"
+                          );
+                          if (response.isSuccess) {
+                            fetchData();
+                            toast.success("Xóa thành công");
+                          } else {
+                            showError(response.message);
+                          }
+                        }}
+                      >
                         <Delete />
                       </IconButton>
                     </CardActions>

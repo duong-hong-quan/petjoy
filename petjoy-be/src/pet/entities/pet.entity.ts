@@ -56,4 +56,7 @@ export class Pet {
 
   @ManyToOne(() => PetType, (petType) => petType.pets)
   isHiringPetType: PetType;
+
+  @Column({ default: false })
+  isDeleted?: boolean;
 }

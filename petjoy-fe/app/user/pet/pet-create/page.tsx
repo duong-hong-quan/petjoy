@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import {
   Typography,
@@ -33,6 +33,13 @@ import {
   getDownloadURL,
   deleteObject,
 } from "firebase/storage";
+import { useRouter } from "next/router";
+import { useSearchParams } from "next/navigation";
+import { Pet } from "@/type";
+import { set } from "firebase/database";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+dayjs.extend(utc);
 
 interface Image {
   file: File;
@@ -41,17 +48,72 @@ interface Image {
 }
 
 const PetRegistrationForm = () => {
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
+  console.log(id);
+  const [initialData, setInitialData] = useState<Pet | null>(null);
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+    reset,
+  } = useForm({
+    defaultValues: initialData || {},
+  });
   const { error, loading, callApi } = useCallApi(api);
-
   const [images, setImages] = useState<Image[]>([]);
   const user = useSelector((state: RootState) => state.auth.user || null);
+
+  useEffect(() => {
+    if (id) {
+      const fetchPet = async () => {
+        const response = await callApi(`pet/${id}`, "GET");
+        if (response.isSuccess) {
+          const pet = response.data as Pet;
+          setInitialData(pet);
+          reset(pet); // Reset form with fetched data
+          setImages([
+            {
+              file: new File([], ""),
+              preview: pet.profilePicture,
+              url: pet.profilePicture,
+            },
+          ]);
+        }
+      };
+      fetchPet();
+    }
+  }, [id, reset]);
+
   const onSubmit = async (data: any) => {
-    if (user) {
+    if (!id) {
+      if (user) {
+        const uploadedImages = await Promise.all(
+          images.map(async (image) => {
+            const storageRef = ref(storage, `images/${image.file.name}`);
+            await uploadBytes(storageRef, image.file);
+            const url = await getDownloadURL(storageRef);
+            return url;
+          })
+        );
+        debugger;
+        if (user) {
+          const response = await callApi("pet", "POST", {
+            name: data.name,
+            dob: data.dob,
+            breed: data.breed,
+            profilePicture: uploadedImages[0] || "",
+            ownerId: user.id,
+            petTypeId: Number(data.petTypeId),
+            isHiringPetTypeId: Number(data.isHiringPetTypeId),
+            filterPetTypeId: Number(data.filterPetTypeId),
+          });
+          if (response.isSuccess) {
+            toast.success("Hồ sơ thú cưng đã được tạo");
+          }
+        }
+      }
+    } else {
       const uploadedImages = await Promise.all(
         images.map(async (image) => {
           const storageRef = ref(storage, `images/${image.file.name}`);
@@ -60,9 +122,8 @@ const PetRegistrationForm = () => {
           return url;
         })
       );
-      debugger;
       if (user) {
-        const response = await callApi("pet", "POST", {
+        const response = await callApi(`pet/${id}`, "PUT", {
           name: data.name,
           dob: data.dob,
           breed: data.breed,
@@ -73,12 +134,12 @@ const PetRegistrationForm = () => {
           filterPetTypeId: Number(data.filterPetTypeId),
         });
         if (response.isSuccess) {
-          toast.success("Hồ sơ thú cưng đã được tạo");
+          toast.success("Hồ sơ thú cưng đã được lưu");
         }
       }
     }
   };
-
+  console.log(images);
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files || []);
     const newImages = files.map((file) => ({
@@ -89,13 +150,19 @@ const PetRegistrationForm = () => {
   };
 
   const handleRemoveImage = async (index: number) => {
+    debugger;
     const imageToRemove = images[index];
     if (imageToRemove.url) {
-      const storageRef = ref(storage, imageToRemove.url);
-      await deleteObject(storageRef);
+      try {
+        const storageRef = ref(storage, imageToRemove.url);
+        const response = await deleteObject(storageRef);
+      } catch (e) {
+        console.log(e);
+      }
     }
     setImages((prevImages) => prevImages.filter((_, i) => i !== index));
   };
+
   // Custom styles for rounded corners and labels
   const roundedStyle = {
     "& .MuiOutlinedInput-root": {
@@ -116,12 +183,19 @@ const PetRegistrationForm = () => {
     color: "#007EFF",
     marginBottom: 1,
   };
-
+  console.log(dayjs.utc(initialData?.dob).format("YYYY-MM-DD"));
   return loading ? (
     <LoadingOverlay loading />
   ) : (
     <AuthWrapper>
-      <Box sx={{ padding: 4 }}>
+      <Box
+        sx={{
+          padding: 24,
+          borderRadius: "20px",
+          marginTop: "50px",
+          border: "1px solid #ccc",
+        }}
+      >
         <Typography
           variant="h4"
           component="h1"
@@ -133,7 +207,7 @@ const PetRegistrationForm = () => {
             marginBottom: 4,
           }}
         >
-          Tạo hồ sơ thú cưng
+          {id ? "Chỉnh sửa" : "Tạo"} hồ sơ thú cưng
         </Typography>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={4}>
@@ -141,7 +215,7 @@ const PetRegistrationForm = () => {
               <Controller
                 name="name"
                 control={control}
-                defaultValue=""
+                defaultValue={initialData?.name || ""}
                 rules={{ required: "Tên là bắt buộc" }}
                 render={({ field, fieldState: { error } }) => (
                   <TextField
@@ -151,20 +225,6 @@ const PetRegistrationForm = () => {
                     fullWidth
                     error={!!error}
                     helperText={error?.message}
-                    sx={{ ...roundedStyle, marginBottom: 2 }}
-                  />
-                )}
-              />
-              <Controller
-                name="breed"
-                control={control}
-                defaultValue=""
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    label="Giống"
-                    variant="outlined"
-                    fullWidth
                     sx={{ ...roundedStyle, marginBottom: 2 }}
                   />
                 )}
@@ -179,14 +239,14 @@ const PetRegistrationForm = () => {
                 <Controller
                   name="petTypeId"
                   control={control}
-                  defaultValue=""
+                  defaultValue={initialData?.petTypeId || ""}
                   rules={{ required: "Loài là bắt buộc" }}
                   render={({ field }) => (
                     <Box sx={{ display: "flex", gap: 2 }}>
                       <Button
                         {...field}
                         onClick={() => field.onChange("1")}
-                        variant={field.value === "1" ? "contained" : "outlined"}
+                        variant={field.value == "1" ? "contained" : "outlined"}
                         startIcon={<Pets />}
                         sx={{ flex: 1, borderRadius: "15px" }}
                       >
@@ -195,7 +255,7 @@ const PetRegistrationForm = () => {
                       <Button
                         {...field}
                         onClick={() => field.onChange("2")}
-                        variant={field.value === "2" ? "contained" : "outlined"}
+                        variant={field.value == "2" ? "contained" : "outlined"}
                         startIcon={<Pets />}
                         sx={{ flex: 1, borderRadius: "15px" }}
                       >
@@ -205,27 +265,48 @@ const PetRegistrationForm = () => {
                   )}
                 />
               </FormControl>
+              <Controller
+                name="breed"
+                control={control}
+                defaultValue={initialData?.breed || ""}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label="Giống"
+                    variant="outlined"
+                    fullWidth
+                    sx={{ ...roundedStyle, marginBottom: 2 }}
+                  />
+                )}
+              />
 
               <Controller
                 name="dob"
                 control={control}
-                defaultValue=""
                 render={({ field }) => (
                   <TextField
                     {...field}
                     label="Ngày sinh"
                     type="date"
-                    inputProps={{ max: new Date().toISOString().split("T")[0] }}
-                    InputLabelProps={{ shrink: true }}
+                    value={
+                      field.value
+                        ? dayjs.utc(field.value).format("YYYY-MM-DD")
+                        : ""
+                    }
                     fullWidth
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <DateRange />
-                        </InputAdornment>
-                      ),
+                    slotProps={{
+                      input: {
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <DateRange />
+                          </InputAdornment>
+                        ),
+                      },
                     }}
                     sx={{ ...roundedStyle, marginBottom: 2 }}
+                    onChange={(e) =>
+                      field.onChange(dayjs(e.target.value).format("YYYY-MM-DD"))
+                    }
                   />
                 )}
               />
@@ -240,14 +321,14 @@ const PetRegistrationForm = () => {
                 <Controller
                   name="isHiringPetTypeId"
                   control={control}
-                  defaultValue=""
+                  defaultValue={initialData?.isHiringPetTypeId || ""}
                   rules={{ required: "Mong muốn tìm kiếm là bắt buộc" }}
                   render={({ field }) => (
                     <Box sx={{ display: "flex", gap: 2 }}>
                       <Button
                         {...field}
                         onClick={() => field.onChange("1")}
-                        variant={field.value === "1" ? "contained" : "outlined"}
+                        variant={field.value == "1" ? "contained" : "outlined"}
                         startIcon={<Pets />}
                         sx={{ flex: 1, borderRadius: "15px" }}
                       >
@@ -256,7 +337,7 @@ const PetRegistrationForm = () => {
                       <Button
                         {...field}
                         onClick={() => field.onChange("2")}
-                        variant={field.value === "2" ? "contained" : "outlined"}
+                        variant={field.value == "2" ? "contained" : "outlined"}
                         startIcon={<Pets />}
                         sx={{ flex: 1, borderRadius: "15px" }}
                       >
@@ -277,14 +358,14 @@ const PetRegistrationForm = () => {
                 <Controller
                   name="filterPetTypeId"
                   control={control}
-                  defaultValue=""
+                  defaultValue={initialData?.filterPetTypeId || ""}
                   rules={{ required: "Hiển thị là bắt buộc" }}
                   render={({ field }) => (
                     <Box sx={{ display: "flex", gap: 2 }}>
                       <Button
                         {...field}
                         onClick={() => field.onChange("1")}
-                        variant={field.value === "1" ? "contained" : "outlined"}
+                        variant={field.value == "1" ? "contained" : "outlined"}
                         sx={{ flex: 1, borderRadius: "15px" }}
                       >
                         Chó
@@ -292,7 +373,7 @@ const PetRegistrationForm = () => {
                       <Button
                         {...field}
                         onClick={() => field.onChange("2")}
-                        variant={field.value === "2" ? "contained" : "outlined"}
+                        variant={field.value == "2" ? "contained" : "outlined"}
                         sx={{ flex: 1, borderRadius: "15px" }}
                       >
                         mèo
@@ -301,81 +382,96 @@ const PetRegistrationForm = () => {
                   )}
                 />
               </FormControl>
-
-              {/* <Controller
-              name="area"
-              control={control}
-              defaultValue=""
-              rules={{ required: "Khu vực là bắt buộc" }}
-              render={({ field }) => (
-                <FormControl fullWidth sx={{ marginBottom: 2 }}>
-                  <FormLabel sx={labelStyle}>Khu vực</FormLabel>
-                  <Select {...field} displayEmpty sx={roundedStyle}>
-                    <MenuItem value="" disabled>
-                      Chọn khu vực
-                    </MenuItem>
-                    <MenuItem value="hanoi">Hà Nội</MenuItem>
-                    <MenuItem value="hochiminh">Hồ Chí Minh</MenuItem>
-                  </Select>
-                </FormControl>
-              )}
-            /> */}
             </Grid>
 
             <Grid item xs={12} md={6}>
               <FormControl fullWidth sx={{ marginBottom: 2 }}>
-                <FormLabel sx={labelStyle}>Ảnh hồ sơ</FormLabel>
+                <FormLabel sx={labelStyle}>
+                  Tải hình thú cưng của bạn lên
+                </FormLabel>
                 <Input
                   type="file"
                   onChange={handleImageChange}
                   disableUnderline
                   fullWidth
-                  endAdornment={
-                    <InputAdornment position="end">
-                      <CloudUpload />
-                    </InputAdornment>
-                  }
+                  inputProps={{ multiple: true }}
+                  sx={{
+                    display: "none",
+                  }}
+                  id="upload-button"
                 />
+                <label htmlFor="upload-button">
+                  <Button
+                    variant="contained"
+                    component="span"
+                    startIcon={<CloudUpload />}
+                    sx={{
+                      borderRadius: 2,
+                      backgroundColor: "#007EFF",
+                      color: "white",
+                      "&:hover": {
+                        backgroundColor: "#005BB5",
+                      },
+                    }}
+                  >
+                    Tải ảnh lên
+                  </Button>
+                </label>
               </FormControl>
+              <Typography variant="h6">Tải ảnh để bắt đầu</Typography>
+
               {images.length > 0 && (
-                <ImageList
-                  sx={{ width: "100%", height: 450 }}
-                  cols={3}
-                  rowHeight={164}
-                >
-                  {images.map((image, index) => (
-                    <ImageListItem key={index}>
-                      <img
-                        src={image.preview}
-                        alt={`Preview ${index + 1}`}
-                        loading="lazy"
-                        style={{ height: "100%", objectFit: "cover" }}
-                      />
-                      <ImageListItemBar
+                <Box sx={{ marginTop: 2 }}>
+                  <Box
+                    sx={{
+                      display: "grid",
+                      gridTemplateColumns:
+                        "repeat(auto-fill, minmax(150px, 1fr))",
+                      gap: 2,
+                    }}
+                  >
+                    {images.map((image, index) => (
+                      <Box
+                        key={index}
                         sx={{
-                          background:
-                            "linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, " +
-                            "rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)",
+                          position: "relative",
+                          borderRadius: 2,
+                          overflow: "hidden",
+                          boxShadow: 3,
                         }}
-                        position="top"
-                        actionIcon={
+                      >
+                        <img
+                          src={image.preview}
+                          alt={`Preview ${index + 1}`}
+                          loading="lazy"
+                          style={{
+                            width: "100%",
+                            height: "150px",
+                            objectFit: "cover",
+                          }}
+                        />
+                        <Box
+                          sx={{
+                            position: "absolute",
+                            top: 0,
+                            right: 0,
+                            background: "rgba(0, 0, 0, 0.5)",
+                            borderRadius: "0 0 0 8px",
+                          }}
+                        >
                           <IconButton
                             sx={{ color: "white" }}
                             onClick={() => handleRemoveImage(index)}
                           >
                             <Delete />
                           </IconButton>
-                        }
-                        actionPosition="right"
-                      />
-                    </ImageListItem>
-                  ))}
-                </ImageList>
+                        </Box>
+                      </Box>
+                    ))}
+                  </Box>
+                </Box>
               )}
-              <Typography variant="body1">
-                Tải lên 2 bức ảnh để bắt đầu. Thêm 4 bức ảnh / video để hồ sơ
-                của bạn được nổi bật.
-              </Typography>
+
               <Button
                 type="submit"
                 variant="contained"
@@ -388,7 +484,7 @@ const PetRegistrationForm = () => {
                   marginTop: 2,
                 }}
               >
-                LƯU HỒ SƠ{" "}
+                {id ? "LƯU THAY ĐỔI" : "LƯU"} HỒ SƠ
               </Button>
             </Grid>
           </Grid>

@@ -36,6 +36,7 @@ export class PetService {
     const data = await this.repository.find({
       where: {
         ownerId: userId,
+        isDeleted: false,
       },
       relations: ["owner", "petType", "filterPetType", "isHiringPetType"],
     });
@@ -68,7 +69,12 @@ export class PetService {
   }
 
   async remove(id: number): Promise<AppActionResultDto> {
-    await this.repository.delete(id);
+    const pet = await this.repository.findOne({
+      where: { id: id },
+    });
+    pet.isDeleted = true;
+    await this.repository.save(pet);
+
     return {
       data: { deleted: true },
       message: ["Data deleted successfully"],

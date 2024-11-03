@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Query,
+  Put,
 } from "@nestjs/common";
 import { PetService } from "./pet.service";
 import { CreatePetDto } from "./dto/create-pet.dto";
@@ -31,7 +32,7 @@ export class PetController {
     return this.petService.findOne(+id);
   }
 
-  @Patch(":id")
+  @Put(":id")
   update(@Param("id") id: string, @Body() updatePetDto: UpdatePetDto) {
     return this.petService.update(+id, updatePetDto);
   }
