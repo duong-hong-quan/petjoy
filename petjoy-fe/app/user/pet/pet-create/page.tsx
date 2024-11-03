@@ -239,14 +239,14 @@ const PetRegistrationForm = () => {
                 <Controller
                   name="petTypeId"
                   control={control}
-                  defaultValue={initialData?.petTypeId || ""}
+                  defaultValue={initialData?.petTypeId || 1}
                   rules={{ required: "Loài là bắt buộc" }}
                   render={({ field }) => (
                     <Box sx={{ display: "flex", gap: 2 }}>
                       <Button
                         {...field}
-                        onClick={() => field.onChange("1")}
-                        variant={field.value == "1" ? "contained" : "outlined"}
+                        onClick={() => field.onChange(1)}
+                        variant={field.value == 1 ? "contained" : "outlined"}
                         startIcon={<Pets />}
                         sx={{ flex: 1, borderRadius: "15px" }}
                       >
@@ -254,8 +254,8 @@ const PetRegistrationForm = () => {
                       </Button>
                       <Button
                         {...field}
-                        onClick={() => field.onChange("2")}
-                        variant={field.value == "2" ? "contained" : "outlined"}
+                        onClick={() => field.onChange(2)}
+                        variant={field.value == 2 ? "contained" : "outlined"}
                         startIcon={<Pets />}
                         sx={{ flex: 1, borderRadius: "15px" }}
                       >
@@ -321,14 +321,14 @@ const PetRegistrationForm = () => {
                 <Controller
                   name="isHiringPetTypeId"
                   control={control}
-                  defaultValue={initialData?.isHiringPetTypeId || ""}
+                  defaultValue={initialData?.isHiringPetTypeId || 1}
                   rules={{ required: "Mong muốn tìm kiếm là bắt buộc" }}
                   render={({ field }) => (
                     <Box sx={{ display: "flex", gap: 2 }}>
                       <Button
                         {...field}
-                        onClick={() => field.onChange("1")}
-                        variant={field.value == "1" ? "contained" : "outlined"}
+                        onClick={() => field.onChange(1)}
+                        variant={field.value == 1 ? "contained" : "outlined"}
                         startIcon={<Pets />}
                         sx={{ flex: 1, borderRadius: "15px" }}
                       >
@@ -336,8 +336,8 @@ const PetRegistrationForm = () => {
                       </Button>
                       <Button
                         {...field}
-                        onClick={() => field.onChange("2")}
-                        variant={field.value == "2" ? "contained" : "outlined"}
+                        onClick={() => field.onChange(2)}
+                        variant={field.value == 2 ? "contained" : "outlined"}
                         startIcon={<Pets />}
                         sx={{ flex: 1, borderRadius: "15px" }}
                       >
@@ -358,22 +358,22 @@ const PetRegistrationForm = () => {
                 <Controller
                   name="filterPetTypeId"
                   control={control}
-                  defaultValue={initialData?.filterPetTypeId || ""}
+                  defaultValue={initialData?.filterPetTypeId || 1}
                   rules={{ required: "Hiển thị là bắt buộc" }}
                   render={({ field }) => (
                     <Box sx={{ display: "flex", gap: 2 }}>
                       <Button
                         {...field}
-                        onClick={() => field.onChange("1")}
-                        variant={field.value == "1" ? "contained" : "outlined"}
+                        onClick={() => field.onChange(1)}
+                        variant={field.value == 1 ? "contained" : "outlined"}
                         sx={{ flex: 1, borderRadius: "15px" }}
                       >
                         Chó
                       </Button>
                       <Button
                         {...field}
-                        onClick={() => field.onChange("2")}
-                        variant={field.value == "2" ? "contained" : "outlined"}
+                        onClick={() => field.onChange(2)}
+                        variant={field.value == 2 ? "contained" : "outlined"}
                         sx={{ flex: 1, borderRadius: "15px" }}
                       >
                         mèo
