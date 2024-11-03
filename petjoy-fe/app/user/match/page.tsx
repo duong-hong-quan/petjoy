@@ -128,7 +128,8 @@ const MatchPage = () => {
         }
       }
     } else {
-      showError(error);
+     if(response.message.length > 0){
+       showError(response.message);
     }
   };
 
