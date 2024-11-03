@@ -139,9 +139,14 @@ export class PetService {
         relations: ["owner", "isHiringPetType", "petType", "filterPetType"],
       });
 
-      if (data) {
+      // Filter out pets that have already been liked by the given petId
+      const availablePets = data.filter(
+        (pet) => !likedPetIdArray.includes(pet.id)
+      );
+
+      if (availablePets.length > 0) {
         return {
-          data,
+          data: availablePets,
           isSuccess: true,
           message: ["Get data successfully"],
         };

@@ -34,7 +34,8 @@ import { useRouter } from "next/navigation";
 import { Room } from "../../../type";
 import { setPet } from "../../redux/features/authSlice";
 import Link from "next/link";
-import { calculateAge } from "@/utils/utility";
+import { calculateAge, showError } from "@/utils/utility";
+import { toast } from "react-toastify";
 const MatchPage = () => {
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [swipePosition, setSwipePosition] = useState(0);
@@ -42,7 +43,7 @@ const MatchPage = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const user = useSelector((state: RootState) => state.auth.user || null);
   const [petsLike, setPetsLike] = useState<Pet[]>([]);
-  const { callApi } = useCallApi(api);
+  const { callApi, error } = useCallApi(api);
   const [pets, setPets] = useState<Pet[]>([]);
   const [petsOfMe, setPetsOfMe] = useState<Pet[]>([]);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -126,6 +127,8 @@ const MatchPage = () => {
           ] as Room[]);
         }
       }
+    } else {
+      showError(error);
     }
   };
 
