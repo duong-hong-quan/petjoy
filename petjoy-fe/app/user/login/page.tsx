@@ -25,6 +25,7 @@ import useCallApi from "../../../api/callApi";
 import api from "@/api/config";
 import { LoadingOverlay } from "../../components/LoadingOverlay";
 import { RootState } from "../../redux/store";
+import { debug } from "console";
 
 export default function LoginPage() {
   const { error, loading, callApi } = useCallApi(api);
@@ -106,10 +107,11 @@ export default function LoginPage() {
               !response.isSuccess &&
               !response.message.includes("User is banned")
             ) {
+              debugger;
               const response = await callApi("user", "POST", {
                 email: decodedToken.email,
                 password: "google123@",
-                name: decodedToken.name,
+                name: result.user.displayName,
                 profilePicture: user.photoURL,
               });
               if (response?.isSuccess) {
