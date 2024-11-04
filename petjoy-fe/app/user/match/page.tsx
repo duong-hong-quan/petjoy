@@ -98,7 +98,7 @@ const MatchPage = () => {
       isLike,
     });
     if (response.isSuccess) {
-      fetchData();
+     await fetchData();
       if (response.message.includes("Matchingggg")) {
         setOpen(true);
         const roomData = (await getEntity("/room")) as Room[];

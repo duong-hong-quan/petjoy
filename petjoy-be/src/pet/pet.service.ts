@@ -124,7 +124,6 @@ export class PetService {
       const likedPets = await this.likeRepository.find({
         where: {
           originPetId: petId,
-          isLike: true,
         },
         select: ["likePetId"],
       });
