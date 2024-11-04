@@ -10,15 +10,21 @@ import {
   Modal,
   Typography,
   Button,
-  Chip,
   Divider,
   CardMedia,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from "@mui/material";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/redux/store";
 import { toast } from "react-toastify";
 import { CheckCircle, Close } from "@mui/icons-material";
-import QR from "../../../assets/img/QR.png";
+import QR139 from "../../../assets/img/QR139.png";
+import QR35 from "../../../assets/img/QR35.png";
+
 const Package = () => {
   const [packages, setPackages] = useState<PaymentPackage[]>([]);
   const { callApi } = useCallApi(api);
@@ -26,7 +32,9 @@ const Package = () => {
     null
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
   const user = useSelector((state: RootState) => state.auth.user);
+
   const fetchData = async () => {
     const response = await callApi("payment-package", "GET");
     if (response.isSuccess) {
@@ -64,6 +72,15 @@ const Package = () => {
         toast.error("Mua gói thất bại");
       }
     }
+    setIsConfirmDialogOpen(false);
+  };
+
+  const handleOpenConfirmDialog = () => {
+    setIsConfirmDialogOpen(true);
+  };
+
+  const handleCloseConfirmDialog = () => {
+    setIsConfirmDialogOpen(false);
   };
 
   return (
@@ -150,7 +167,7 @@ const Package = () => {
                 </Typography>
                 <CardMedia
                   component="img"
-                  image={QR.src}
+                  image={selectedPackage.id === 1 ? QR139.src : QR35.src}
                   alt="QR Code"
                   sx={{
                     width: "100%",
@@ -163,7 +180,7 @@ const Package = () => {
               <Button
                 variant="contained"
                 fullWidth
-                onClick={handleConfirm}
+                onClick={handleOpenConfirmDialog}
                 sx={{
                   mt: 2,
                   bgcolor: "secondary.main",
@@ -178,6 +195,27 @@ const Package = () => {
           </Box>
         </Modal>
       )}
+      <Dialog
+        open={isConfirmDialogOpen}
+        onClose={handleCloseConfirmDialog}
+        aria-labelledby="confirm-dialog-title"
+        aria-describedby="confirm-dialog-description"
+      >
+        <DialogTitle id="confirm-dialog-title">Xác nhận mua gói</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="confirm-dialog-description">
+            Bạn đã chắc chắn rằng bạn đã chuyển khoản cho chúng tôi thành công chưa ạ 😍 ?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseConfirmDialog} color="primary">
+            Hủy
+          </Button>
+          <Button onClick={handleConfirm} color="primary" autoFocus>
+            Xác nhận
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 };
