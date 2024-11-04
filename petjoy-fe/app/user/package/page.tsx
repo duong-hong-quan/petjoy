@@ -167,7 +167,7 @@ const Package = () => {
                 </Typography>
                 <CardMedia
                   component="img"
-                  image={selectedPackage.id === 1 ? QR139.src : QR35.src}
+                  image={selectedPackage.id === 1 ? QR35.src : QR139.src}
                   alt="QR Code"
                   sx={{
                     width: "100%",
