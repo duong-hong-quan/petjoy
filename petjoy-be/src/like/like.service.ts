@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { CreateLikeDto } from "./dto/create-like.dto";
 import { UpdateLikeDto } from "./dto/update-like.dto";
 import { Like } from "./entities/like.entity";
-import { Repository } from "typeorm";
+import { LessThan, MoreThanOrEqual, Repository } from "typeorm";
 import { AppActionResultDto } from "../common/dto/app-action-result.dto";
 import { User } from "../user/entities/user.entity";
 import { Pet } from "../pet/entities/pet.entity";
@@ -52,12 +52,13 @@ export class LikeService {
       const [paymentDb, paymentDbMonth] = await this.getPaymentRecords(
         originPet.ownerId
       );
-
+console.log("paymentDb", paymentDb);
+console.log("paymentDbMonth", paymentDbMonth);
       if (paymentDb || paymentDbMonth) {
         return await this.createLikeAndCheckMatch(createLikeDto);
       } else {
         const likeCount = await this.getLikeCount(createLikeDto.originPetId);
-
+ console.log("likeCount", likeCount);
         if (likeCount > 5) {
           return buildError("Like limit exceeded");
         }
@@ -96,14 +97,18 @@ export class LikeService {
   }
 
   private async getLikeCount(originPetId: number): Promise<number> {
-    return await this.repository.count({
-      where: {
-        originPetId,
-        date: new Date(),
-      },
-    });
-  }
+    const todayStart = new Date(new Date().setHours(0, 0, 0, 0));
+    const tomorrowStart = new Date(todayStart);
+    tomorrowStart.setDate(tomorrowStart.getDate() + 1);
 
+    const count = await this.repository.createQueryBuilder('like')
+        .where('like.originPetId = :originPetId', { originPetId })
+        .andWhere('like.date >= :todayStart', { todayStart })
+        .andWhere('like.date < :tomorrowStart', { tomorrowStart })
+        .getCount();
+
+    return count;
+}
   private async createLikeAndCheckMatch(
     createLikeDto: CreateLikeDto
   ): Promise<AppActionResultDto> {
