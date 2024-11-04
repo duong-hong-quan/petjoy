@@ -24,6 +24,8 @@ import { toast } from "react-toastify";
 import { CheckCircle, Close } from "@mui/icons-material";
 import QR139 from "../../../assets/img/QR139.png";
 import QR35 from "../../../assets/img/QR35.png";
+import { set } from "firebase/database";
+import { useRouter } from "next/navigation";
 
 const Package = () => {
   const [packages, setPackages] = useState<PaymentPackage[]>([]);
@@ -34,8 +36,20 @@ const Package = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
   const user = useSelector((state: RootState) => state.auth.user);
-
+  const [isPayed, setIsPayed] = useState(false);
+  const router = useRouter();
   const fetchData = async () => {
+    const responseCurrentPackage = await callApi(
+      `payment/current-payment-package/${user?.id}`,
+      "GET"
+    );
+    if (responseCurrentPackage.isSuccess) {
+      if (responseCurrentPackage.data.length > 0) {
+        setIsPayed(true);
+      } else {
+        setIsPayed(false);
+      }
+    }
     const response = await callApi("payment-package", "GET");
     if (response.isSuccess) {
       setPackages(response.data);
@@ -83,6 +97,47 @@ const Package = () => {
     setIsConfirmDialogOpen(false);
   };
 
+  if (isPayed) {
+    return (
+      <Container maxWidth="md">
+        <Box
+          sx={{
+            marginTop: "20px",
+            textAlign: "center",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Typography
+            variant="h6"
+            sx={{
+              margin: "20px 0",
+              fontWeight: "bold",
+              color: "#1976d2",
+              display: "block",
+            }}
+          >
+            {"Bạn đã mua gói quẹt rồi, hãy đợi quản trị viên duyệt nhé 😍".toUpperCase()}
+          </Typography>
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{
+              margin: "20px 0",
+              "&:hover": {
+                bgcolor: "#1976d2",
+              },
+              width: "200px",
+            }}
+            onClick={() => router.push("/user/match")}
+          >
+            Quẹt ngay
+          </Button>
+        </Box>
+      </Container>
+    );
+  }
   return (
     <Container maxWidth="md">
       <Box
@@ -204,7 +259,8 @@ const Package = () => {
         <DialogTitle id="confirm-dialog-title">Xác nhận mua gói</DialogTitle>
         <DialogContent>
           <DialogContentText id="confirm-dialog-description">
-            Bạn đã chắc chắn rằng bạn đã chuyển khoản cho chúng tôi thành công chưa ạ 😍 ?
+            Bạn đã chắc chắn rằng bạn đã chuyển khoản cho chúng tôi thành công
+            chưa ạ 😍 ?
           </DialogContentText>
         </DialogContent>
         <DialogActions>

@@ -30,6 +30,10 @@ export class PaymentController {
   findAllByUser(@Param("userid") userid: number) {
     return this.paymentService.findAllByUser(userid);
   }
+  @Get("current-payment-package/:userid")
+  getCurrentUserPayment(@Param("userid") userid: number) {
+    return this.paymentService.getCurrentUserPayment(userid);
+  }
 
   @Put()
   update(@Body() dto: UpdatePaymentDto) {

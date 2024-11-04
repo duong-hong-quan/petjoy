@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { CreatePaymentDto } from "./dto/create-payment.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Payment } from "./entities/payment.entity";
-import { Repository } from "typeorm";
+import { Between, LessThanOrEqual, MoreThanOrEqual, Repository } from "typeorm";
 import { AppActionResultDto } from "../common/dto/app-action-result.dto";
 import { User } from "../user/entities/user.entity";
 import { buildError } from "../common/utility";
@@ -138,5 +138,51 @@ export class PaymentService {
   }
   remove(id: number) {
     return `This action removes a #${id} payment`;
+  }
+  async getCurrentUserPayment(userId: number): Promise<AppActionResultDto> {
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+    let endDate: Date;
+
+    // Fetch the latest payment for the user to determine the package type
+    const latestPayment = await this.repository.findOne({
+      where: { userId },
+      order: { paymentDate: "DESC" },
+    });
+
+    console.log(latestPayment);
+
+    if (!latestPayment) {
+      return buildError("No payment found for the user");
+    }
+
+    const packageType = latestPayment.paymentPackageId;
+
+    if (packageType === 1) {
+      endDate = new Date(now);
+      endDate.setDate(now.getDate() + 7);
+    } else if (packageType === 2) {
+      endDate = new Date(now);
+      endDate.setDate(now.getDate() + 30);
+    } else {
+      throw new Error("Invalid package type");
+    }
+
+    endDate.setHours(23, 59, 59, 999); // Set endDate to the end of the day
+
+    console.log(endDate);
+
+    const data = await this.repository.find({
+      where: {
+        userId,
+        paymentDate: Between(now, endDate),
+      },
+    });
+
+    return {
+      data,
+      isSuccess: true,
+      message: ["Get data successfully"],
+    };
   }
 }
