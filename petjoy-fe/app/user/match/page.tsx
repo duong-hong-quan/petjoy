@@ -69,11 +69,9 @@ const MatchPage = () => {
       setSwipePosition(eventData.deltaX);
     },
     onSwipedLeft: () => {
-      handleSwipe("left");
       handleSwipeApi("left");
     },
     onSwipedRight: () => {
-      handleSwipe("right");
       handleSwipeApi("right");
     },
     onSwiped: () => setSwipePosition(0),
@@ -99,6 +97,7 @@ const MatchPage = () => {
     });
     if (response.isSuccess) {
      await fetchData();
+     handleSwipe(direction);
       if (response.message.includes("Matchingggg")) {
         setOpen(true);
         const roomData = (await getEntity("/room")) as Room[];
@@ -238,7 +237,6 @@ const MatchPage = () => {
                       >
                         <IconButton
                           onClick={async () => {
-                            handleSwipe("left");
                             await handleSwipeApi("left");
                           }}
                           sx={{
@@ -258,7 +256,6 @@ const MatchPage = () => {
                         </IconButton>
                         <IconButton
                           onClick={async () => {
-                            handleSwipe("right");
                             await handleSwipeApi("right");
                           }}
                           sx={{
