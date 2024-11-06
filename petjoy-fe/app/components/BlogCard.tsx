@@ -3,6 +3,7 @@ import React, {
   DO_NOT_USE_OR_YOU_WILL_BE_FIRED_EXPERIMENTAL_REACT_NODES,
 } from "react";
 import { Card, CardMedia, CardContent, Typography, Box } from "@mui/material";
+import { wrap } from "module";
 
 interface BlogCardProps {
   title: string;
@@ -30,7 +31,8 @@ const BlogCard: React.FC<BlogCardProps> = ({
           boxShadow: 6,
         },
         minHeight: 350,
-        maxHeight: 350,
+        cursor: "pointer",
+        textOverflow: "ellipsis",
       }}
     >
       <Box sx={{ position: "relative", paddingTop: "56.25%" }}>
@@ -49,10 +51,10 @@ const BlogCard: React.FC<BlogCardProps> = ({
           }}
         />
       </Box>
-      <CardContent sx={{ bgcolor: "background.paper", py: 2 }}>
+      <CardContent sx={{ bgcolor: "background.paper", py: 4, px: 4 }}>
         <Typography
           gutterBottom
-          variant="h5"
+          variant="h6"
           component="div"
           sx={{ fontWeight: "bold", mb: 1 }}
         >
